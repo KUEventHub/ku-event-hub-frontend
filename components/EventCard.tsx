@@ -11,6 +11,9 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Link from "next/link";
+import EditEventButton from "./EditEventButton";
+import DeleteEventButton from "./DeleteEventButton";
+import JoinEventButton from "./JoinEventButton";
 
 interface Event {
   id: number;
@@ -169,15 +172,19 @@ export default function EventCard({ events }: EventCardProps) {
                   </Box>
                 </CardContent>
                 <Box>
-                  {session && (
-                    <Button
-                      size="small"
-                      color="secondary"
-                      variant="contained"
-                      sx={{ m: { xs: 2, md: 3 }, mt: { xs: 0, md: 3 } }}
+                  {session && session.user.role.includes("User") && (
+                    <JoinEventButton />
+                  )}
+                  {session && session.user.role.includes("Admin") && (
+                    <Box
+                      sx={{
+                        display: { md: "flex" },
+                        flexDirection: { md: "column" },
+                      }}
                     >
-                      เข้าร่วมกิจกรรม
-                    </Button>
+                      <EditEventButton />
+                      <DeleteEventButton />
+                    </Box>
                   )}
                 </Box>
               </Box>

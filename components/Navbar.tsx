@@ -12,12 +12,31 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { ButtonBase, CssBaseline } from "@mui/material";
+import {
+  ButtonBase,
+  CssBaseline,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import BlockIcon from "@mui/icons-material/Block";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import EventIcon from "@mui/icons-material/Event";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import MenuIcon from "@mui/icons-material/Menu";
 
 interface Props {
+  window?: () => Window;
   children: React.ReactNode;
 }
+
+const drawerWidth = 275;
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -50,14 +69,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Navbar(props: Props) {
-  const { children } = props;
+export default function NavBar(props: Props) {
+  const { window, children } = props;
+  const [mobileOpen, setMobileOpen] = React.useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
+  const handleSignIn = () => {
+    signIn("auth0", { callbackUrl: "/" });
   };
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -72,6 +95,78 @@ export default function Navbar(props: Props) {
     setAnchorElUser(null);
   };
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const handleClick = () => {
+    if (mobileOpen) {
+      setMobileOpen(!mobileOpen);
+    } else {
+      setMobileOpen(false);
+    }
+  };
+
+  const menuItems = [
+    {
+      href: "/admin/user-account",
+      icon: <ManageAccountsIcon />,
+      primary: "บัญชีผู้ใช้งานทั้งหมด",
+    },
+    {
+      href: "/admin/user-account/banned",
+      icon: <BlockIcon />,
+      primary: "บัญชีผู้ใช้งานที่ถูกระงับ",
+    },
+    {
+      href: "/admin/create-event",
+      icon: <AddBoxIcon />,
+      primary: "สร้างกิจกรรม",
+    },
+    {
+      href: "/admin/events",
+      icon: <EventIcon />,
+      primary: "กิจกรรมทั้งหมด",
+    },
+  ];
+
+  const drawer = (
+    <List>
+      {menuItems.map((item, index) => (
+        <Link key={index} href={item.href}>
+          <ListItem
+            disablePadding
+            sx={{
+              backgroundColor:
+                router.pathname === item.href ? "#B2BB1C" : "initial",
+              color: router.pathname === item.href ? "white" : "initial",
+              width: "100%",
+              ":hover": {
+                backgroundColor:
+                  router.pathname === item.href ? "secondary" : "inherit",
+              },
+            }}
+          >
+            <ListItemButton onClick={handleClick}>
+              <ListItemIcon
+                sx={{
+                  pl: 1.5,
+                  color: router.pathname === item.href ? "white" : "initial",
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.primary} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+      ))}
+    </List>
+  );
+
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -81,6 +176,17 @@ export default function Navbar(props: Props) {
           sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         >
           <Toolbar disableGutters>
+            {session && session.user.role.includes("Admin") && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{ ml: 1, display: { md: "none" } }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
             <ButtonBase href="/" sx={{ mx: "auto" }}>
               <Box
                 component="img"
@@ -110,7 +216,7 @@ export default function Navbar(props: Props) {
                   />
                 </IconButton>
                 <Menu
-                  sx={{ mt: "45px" }}
+                  sx={{ mt: "45px", width: 300 }}
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
@@ -125,27 +231,55 @@ export default function Navbar(props: Props) {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography
-                      textAlign="center"
-                      sx={{ fontSize: { xs: 12, md: 14 } }}
+                  <Box
+                    component="div"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      mx: 2,
+                      mt: 1,
+                      mb: 2,
+                    }}
+                  >
+                    <Avatar src={session.user?.image || ""} />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        ml: 1,
+                        minWidth: 100,
+                        maxWidth: 150,
+                      }}
                     >
-                      ดูโปรไฟล์
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography
-                      textAlign="center"
-                      sx={{ fontSize: { xs: 12, md: 14 } }}
-                    >
-                      แก้ไขข้อมูลส่วนตัว
-                    </Typography>
-                  </MenuItem>
+                      <Typography variant="body2" noWrap>
+                        {session.user?.name}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        noWrap
+                        color="text.secondary"
+                      >
+                        {session.user?.email}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Divider sx={{ my: 1 }} />
+                  {session && session.user.role.includes("User") && (
+                    <>
+                      <MenuItem onClick={handleCloseUserMenu}>
+                        <Typography textAlign="center" variant="body2">
+                          ดูโปรไฟล์
+                        </Typography>
+                      </MenuItem>
+                      <MenuItem onClick={handleCloseUserMenu}>
+                        <Typography textAlign="center" variant="body2">
+                          แก้ไขข้อมูลส่วนตัว
+                        </Typography>
+                      </MenuItem>
+                    </>
+                  )}
                   <MenuItem onClick={handleSignOut}>
-                    <Typography
-                      textAlign="center"
-                      sx={{ fontSize: { xs: 12, md: 14 } }}
-                    >
+                    <Typography textAlign="center" variant="body2">
                       ออกจากระบบ
                     </Typography>
                   </MenuItem>
@@ -154,7 +288,7 @@ export default function Navbar(props: Props) {
             ) : (
               <Button
                 color="inherit"
-                onClick={() => signIn("auth0")}
+                onClick={handleSignIn}
                 sx={{ mx: "auto", fontSize: { xs: 12, md: 14 } }}
               >
                 เข้าสู่ระบบ
@@ -162,12 +296,54 @@ export default function Navbar(props: Props) {
             )}
           </Toolbar>
         </AppBar>
+        {session && session.user.role.includes("Admin") && (
+          <Box
+            component="nav"
+            sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+            aria-label="menu items"
+          >
+            <Drawer
+              container={container}
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              ModalProps={{
+                keepMounted: true,
+              }}
+              sx={{
+                display: { xs: "block", md: "none" },
+                "& .MuiDrawer-paper": {
+                  boxSizing: "border-box",
+                  width: drawerWidth,
+                },
+              }}
+            >
+              <Toolbar />
+              {drawer}
+            </Drawer>
+            <Drawer
+              variant="permanent"
+              sx={{
+                display: { xs: "none", md: "block" },
+                "& .MuiDrawer-paper": {
+                  boxSizing: "border-box",
+                  width: drawerWidth,
+                },
+              }}
+              open
+            >
+              <Toolbar />
+              {drawer}
+            </Drawer>
+          </Box>
+        )}
         <Box
           component="main"
           sx={{
             flexGrow: 1,
             p: 3,
             my: 2,
+            width: { md: `calc(100% - ${drawerWidth}px)` },
           }}
         >
           <Toolbar />
