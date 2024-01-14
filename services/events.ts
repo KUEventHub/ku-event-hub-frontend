@@ -1,5 +1,5 @@
 import api from "./api";
-import { EventData } from "@/pages/admin/create-event";
+import { EventData } from "@/interfaces/Event";
 
 export const getEvents = () =>
   api

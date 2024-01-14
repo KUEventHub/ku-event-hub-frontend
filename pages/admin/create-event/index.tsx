@@ -21,22 +21,6 @@ import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
 import { eventTypes } from "@/utils/eventTypes";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
-export interface EventData {
-  event: {
-    name: string;
-    activityHours: string;
-    totalSeats: string;
-    startTime: number;
-    endTime: number;
-    location: string;
-    description: string;
-    eventTypes: string[];
-    image: {
-      base64Image: string | undefined;
-    };
-  };
-}
-
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -223,6 +207,8 @@ export default function CreateEvent() {
         const { status } = error.response;
         if (status === 401) {
           SessionExpiredPopup();
+        } else {
+          showSnackbar("สร้างกิจกรรมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง", "error");
         }
       } else {
         showSnackbar("สร้างกิจกรรมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง", "error");
