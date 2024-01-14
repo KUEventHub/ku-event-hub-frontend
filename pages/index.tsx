@@ -2,8 +2,15 @@ import Head from "next/head";
 import EventCard from "@/components/EventCard";
 import EventType from "@/components/EventType";
 import { Container, Typography } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { getEvents } from "@/services/events";
 
 export default function Home() {
+  const { data, isLoading } = useQuery({
+    queryKey: ['events'],
+    queryFn: () => getEvents()
+  });
+
   return (
     <>
       <Head>
@@ -27,37 +34,8 @@ export default function Home() {
         >
           กิจกรรมทั้งหมด
         </Typography>
-        <EventCard events={data} />
+        <EventCard events={data?.events} />
       </Container>
     </>
   );
 }
-
-export const data = [
-  {
-    id: 1,
-    name: "ชื่อกิจกรรม",
-    type: "กิจกรรมเพื่อสังคม",
-    image:
-      "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg",
-    activity_hours: 4,
-    total_seat: 30,
-    date: "25 ธันวาคม 2566",
-    start_time: "12.00",
-    end_time: "16.00",
-    location: "คณะวิทยาศาสตร์ มหาวิทยาลัยเกษตรศาสตร์",
-  },
-  {
-    id: 2,
-    name: "ชื่อกิจกรรม",
-    type: "กิจกรรมมหาวิทยาลัย",
-    image:
-      "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg",
-    activity_hours: 3,
-    total_seat: 50,
-    date: "22 ธันวาคม 2566",
-    start_time: "17.00",
-    end_time: "20.00",
-    location: "คณะวิทยาศาสตร์ มหาวิทยาลัยเกษตรศาสตร์",
-  },
-];

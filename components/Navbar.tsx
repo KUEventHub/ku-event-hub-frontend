@@ -171,10 +171,7 @@ export default function NavBar(props: Props) {
     <>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar
-          position="fixed"
-          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        >
+        <AppBar position="fixed" sx={{ zIndex: 3 }}>
           <Toolbar disableGutters>
             {session && session.user.role.includes("Admin") && (
               <IconButton
@@ -265,7 +262,7 @@ export default function NavBar(props: Props) {
                   </Box>
                   <Divider sx={{ my: 1 }} />
                   {session && session.user.role.includes("User") && (
-                    <>
+                    <Box>
                       <MenuItem onClick={handleCloseUserMenu}>
                         <Typography textAlign="center" variant="body2">
                           ดูโปรไฟล์
@@ -276,7 +273,7 @@ export default function NavBar(props: Props) {
                           แก้ไขข้อมูลส่วนตัว
                         </Typography>
                       </MenuItem>
-                    </>
+                    </Box>
                   )}
                   <MenuItem onClick={handleSignOut}>
                     <Typography textAlign="center" variant="body2">
@@ -299,7 +296,11 @@ export default function NavBar(props: Props) {
         {session && session.user.role.includes("Admin") && (
           <Box
             component="nav"
-            sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+            sx={{
+              width: { md: drawerWidth },
+              flexShrink: { md: 0 },
+              zIndex: 2,
+            }}
             aria-label="menu items"
           >
             <Drawer
@@ -316,6 +317,7 @@ export default function NavBar(props: Props) {
                   boxSizing: "border-box",
                   width: drawerWidth,
                 },
+                zIndex: 2,
               }}
             >
               <Toolbar />

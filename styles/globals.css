@@ -13,3 +13,35 @@ a {
   color: inherit;
   text-decoration: inherit;
 }
+
+.swal2-styled {
+  font-family: Kanit, sans-serif;
+}
+
+.swal2-styled.swal2-confirm {
+  background-color: #B2BB1C !important;
+  color: white !important;
+}
+
+.swal2-styled.swal2-cancel {
+  background-color: #F1F1F1 !important;
+  color: black !important;
+}
+
+.custom-popup .swal2-actions {
+  margin-bottom: 0.75em;
+}
+
+.custom-popup .swal2-html-container {
+  font-size: 16px !important;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+.custom-popup .swal2-title {
+  font-size: 24px !important;
+}
+
+.session-expired-popup .swal2-title {
+  margin-top: 0.75em;
+}

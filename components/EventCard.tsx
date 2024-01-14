@@ -14,18 +14,24 @@ import Link from "next/link";
 import EditEventButton from "./EditEventButton";
 import DeleteEventButton from "./DeleteEventButton";
 import JoinEventButton from "./JoinEventButton";
+import { formatDate, formatTime } from "@/utils/formatDateTime";
 
-interface Event {
-  id: number;
+interface EventTypes {
+  _id: string;
   name: string;
-  type: string;
-  image: string;
-  activity_hours: number;
-  total_seat: number;
-  date: string;
-  start_time: string;
-  end_time: string;
+}
+
+export interface Event {
+  _id: string;
+  name: string;
+  eventTypes: EventTypes[];
+  imageUrl: string;
+  activityHours: number;
+  totalSeats: number;
+  startTime: Date;
+  endTime: Date;
   location: string;
+  joinedUsers: [];
 }
 
 interface EventCardProps {
@@ -41,8 +47,8 @@ export default function EventCard({ events }: EventCardProps) {
       spacing={{ xs: 2, md: 3 }}
       columns={{ xs: 4, sm: 8, md: 12 }}
     >
-      {events.map((item) => (
-        <Grid item xs={12} sm={4} md={12} key={item.id}>
+      {events?.map((item) => (
+        <Grid item xs={12} sm={4} md={12} key={item._id}>
           <Link href="/">
             <Card
               sx={{
@@ -56,7 +62,7 @@ export default function EventCard({ events }: EventCardProps) {
                 <CardMedia
                   component="img"
                   height="225"
-                  image={item.image}
+                  image={item.imageUrl}
                   sx={{ width: { md: 350 }, flexShrink: 0, mr: 1 }}
                 />
                 <CardContent sx={{ flex: 1, my: "auto" }}>
@@ -74,35 +80,57 @@ export default function EventCard({ events }: EventCardProps) {
                   >
                     {item.name}
                   </Typography>
-                  <Typography
-                    gutterBottom
-                    variant="caption"
-                    sx={{
-                      p: 1,
-                      bgcolor: "#EAEAEA",
-                      borderRadius: 2,
-                      fontWeight: "bold",
-                      mr: 2,
-                      display: "inline-block",
-                    }}
-                  >
-                    {item.type}
-                  </Typography>
 
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
+                  {item.eventTypes.map((eventType) => (
+                    <Typography
+                      key={eventType._id}
+                      gutterBottom
+                      variant="caption"
+                      sx={{
+                        p: 1,
+                        bgcolor: "#EAEAEA",
+                        borderRadius: 2,
+                        fontWeight: "bold",
+                        mr: 2,
+                        display: "inline-block",
+                      }}
+                    >
+                      {eventType.name}
+                    </Typography>
+                  ))}
+
+                  <Box
+                    component="div"
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      mr: 2,
-                      fontSize: { xs: 12, md: 14 },
                     }}
+                    color="text.secondary"
                   >
                     <CalendarMonthIcon sx={{ mr: 1 }} />
-                    วันที่
-                    <span style={{ margin: 6 }}>{item.date}</span>
-                  </Typography>
+                    <Typography
+                      variant="body2"
+                      gutterBottom
+                      color="text.secondary"
+                      sx={{
+                        display: "inline-block",
+                        fontSize: { xs: 12, md: 14 },
+                      }}
+                    >
+                      วันที่
+                      <span style={{ marginLeft: 6 }}>
+                        {formatDate(new Date(item.startTime))}
+                      </span>
+                      {formatDate(new Date(item.startTime)) !==
+                        formatDate(new Date(item.endTime)) && (
+                        <>
+                          <span style={{ margin: 3 }}> - </span>
+                          <span>{formatDate(new Date(item.endTime))}</span>
+                        </>
+                      )}
+                    </Typography>
+                  </Box>
+
                   <Box
                     component="div"
                     sx={{
@@ -123,10 +151,12 @@ export default function EventCard({ events }: EventCardProps) {
                     >
                       เวลา
                       <span style={{ margin: 6 }}>
-                        {item.start_time} น.- {item.end_time} น.
+                        {formatTime(new Date(item.startTime))}
+                        <span style={{ margin: 3 }}> - </span>
+                        {formatTime(new Date(item.endTime))}
                       </span>
                       <span style={{ marginLeft: 6 }}>ชั่วโมงกิจกรรม</span>
-                      <span style={{ margin: 6 }}>{item.activity_hours}</span>
+                      <span style={{ margin: 6 }}>{item.activityHours}</span>
                       ชั่วโมง
                     </Typography>
                   </Box>
@@ -163,10 +193,14 @@ export default function EventCard({ events }: EventCardProps) {
                       }}
                     >
                       จำนวนที่รับ
-                      <span style={{ margin: 6 }}>{item.total_seat}</span>
+                      <span style={{ margin: 6 }}>{item.totalSeats}</span>
                       คน
                       <span style={{ margin: 6 }}>
-                        (ลงทะเบียนแล้ว<span style={{ margin: 6 }}>0</span>คน)
+                        (ลงทะเบียนแล้ว
+                        <span style={{ margin: 6 }}>
+                          {item.joinedUsers.length}
+                        </span>
+                        คน)
                       </span>
                     </Typography>
                   </Box>
