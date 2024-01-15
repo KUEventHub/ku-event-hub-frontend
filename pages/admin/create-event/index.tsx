@@ -62,6 +62,7 @@ export default function CreateEvent() {
   });
   const [loading, setLoading] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
   const router = useRouter();
 
@@ -87,7 +88,15 @@ export default function CreateEvent() {
 
   const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      convertImageToBase64(event.target.files[0]);
+      const file = event.target.files[0];
+      if (imageInputRef.current) {
+        imageInputRef.current.value = "";
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        showSnackbar("รูปภาพต้องมีขนาดไม่เกิน 5 MB", "error");
+        return;
+      }
+      convertImageToBase64(file);
     }
   };
 
@@ -96,7 +105,10 @@ export default function CreateEvent() {
   };
 
   const handleTotalSeatChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setTotalSeat(event.target.value);
+    const { value } = event.target;
+    if (parseInt(value) > 0 || isNaN(parseInt(value))) {
+      setTotalSeat(value);
+    }
   };
 
   const handleStartDateChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -269,8 +281,11 @@ export default function CreateEvent() {
                 รูปภาพกิจกรรม
                 <span style={{ color: "red", marginLeft: 6 }}>*</span>
               </Typography>
+              <Typography color="text.secondary" variant="caption">
+                ขนาดรูปภาพไม่เกิน 5 MB
+              </Typography>
               {errors.base64Image && (
-                <Typography color="error" variant="caption" sx={{ my: 1 }}>
+                <Typography color="error" variant="caption" sx={{ mb: 1 }}>
                   กรุณาเลือกรูปภาพกิจกรรม
                 </Typography>
               )}
@@ -286,7 +301,7 @@ export default function CreateEvent() {
             เลือกรูปภาพ
             <VisuallyHiddenInput
               type="file"
-              accept="image/*"
+              accept=".png, .jpeg, .jpg"
               onChange={handleImageChange}
               ref={imageInputRef}
             />
@@ -418,9 +433,13 @@ export default function CreateEvent() {
                 width: "100%",
               }}
               inputProps={{
-                min: 0,
+                min: 1,
                 onKeyPress: (event) => {
-                  if (event?.key === "-" || event?.key === "+") {
+                  if (
+                    event?.key === "-" ||
+                    event?.key === "+" ||
+                    event?.key === "."
+                  ) {
                     event.preventDefault();
                   }
                 },
