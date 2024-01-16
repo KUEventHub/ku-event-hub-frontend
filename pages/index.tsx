@@ -1,14 +1,23 @@
 import Head from "next/head";
 import EventCard from "@/components/EventCard";
 import EventType from "@/components/EventType";
-import { Container, Typography } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { Box, CircularProgress, Container, Typography } from "@mui/material";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getEvents } from "@/services/events";
+import InfiniteScroll from "react-infinite-scroller";
 
 export default function Home() {
-  const { data, isLoading } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => getEvents()
+  const { data, isLoading, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ["events"],
+    queryFn: ({ pageParam }) => getEvents(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const nextPage =
+        lastPage && lastPage.events.length > 0
+          ? lastPage.pageNumber + 1
+          : undefined;
+      return nextPage;
+    },
   });
 
   return (
@@ -34,7 +43,48 @@ export default function Home() {
         >
           กิจกรรมทั้งหมด
         </Typography>
-        <EventCard events={data?.events} />
+
+        {isLoading ? (
+          <Box
+            component="div"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "70vh",
+              justifyContent: "center",
+            }}
+          >
+            <Box sx={{ display: "flex", justifyContent: "center", mx: "auto" }}>
+              <CircularProgress color="primary" />
+            </Box>
+          </Box>
+        ) : data?.pages[0] === null ? (
+          <Box
+            component="div"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "70vh",
+              justifyContent: "center",
+            }}
+          >
+            <Box sx={{ display: "flex", justifyContent: "center", mx: "auto" }}>
+              ไม่พบกิจกรรม
+            </Box>
+          </Box>
+        ) : (
+          <InfiniteScroll
+            hasMore={hasNextPage}
+            loadMore={() => fetchNextPage()}
+          >
+            {data &&
+              data.pages.map((page, index) => (
+                <Box key={index} sx={{ mt: { xs: 2, md: 3 } }}>
+                  <EventCard events={page?.events} />
+                </Box>
+              ))}
+          </InfiniteScroll>
+        )}
       </Container>
     </>
   );

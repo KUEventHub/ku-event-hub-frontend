@@ -1,9 +1,9 @@
 import api from "./api";
 import { EventData } from "@/interfaces/Event";
 
-export const getEvents = () =>
+export const getEvents = (pageNumber: number) =>
   api
-    .get("/api/events")
+    .get(`/api/events?pageNumber=${pageNumber}`)
     .then((response) => response.data)
     .catch(() => {
       return null;
