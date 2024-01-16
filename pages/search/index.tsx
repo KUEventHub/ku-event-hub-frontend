@@ -17,7 +17,7 @@ import { eventTypes } from "@/utils/eventTypes";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 
-const SearchResultsPage = () => {
+export default function SearchResultsPage() {
   const router = useRouter();
   const { keyword } = router.query;
   const pageSize = 20;
@@ -56,11 +56,13 @@ const SearchResultsPage = () => {
   return (
     <Container component="main" maxWidth="lg">
       <Typography component="h1" sx={{ mb: 2, fontSize: "18px" }}>
-        <span style={{ fontWeight: "bold", marginRight: 6 }}>ผลการค้นหา:</span>
+        <span style={{ fontWeight: "bold", marginRight: 10 }}>ผลการค้นหา:</span>
         <span>{keyword}</span>
       </Typography>
 
-      <Box sx={{ flexGrow: 1, bgcolor: "#EAEAEA", p: 2, mb: 3 }}>
+      <Box
+        sx={{ flexGrow: 1, bgcolor: "#EAEAEA", p: 2, mb: 3, borderRadius: 1 }}
+      >
         <Grid container spacing={3}>
           <Grid item xs={12} lg={6}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -179,6 +181,4 @@ const SearchResultsPage = () => {
       )}
     </Container>
   );
-};
-
-export default SearchResultsPage;
+}
