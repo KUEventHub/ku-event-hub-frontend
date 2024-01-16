@@ -1,13 +1,10 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
 import Menu from "@mui/material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
@@ -30,6 +27,7 @@ import EventIcon from "@mui/icons-material/Event";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import MenuIcon from "@mui/icons-material/Menu";
+import SearchEvents from "./SearchEvents";
 
 interface Props {
   window?: () => Window;
@@ -37,37 +35,6 @@ interface Props {
 }
 
 const drawerWidth = 275;
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 2,
-  width: "75%",
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 1),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(3)})`,
-    transition: theme.transitions.create("width"),
-  },
-}));
 
 export default function NavBar(props: Props) {
   const { window, children } = props;
@@ -179,7 +146,7 @@ export default function NavBar(props: Props) {
                 aria-label="open drawer"
                 edge="start"
                 onClick={handleDrawerToggle}
-                sx={{ ml: 1, display: { md: "none" } }}
+                sx={{ ml: 1, display: { lg: "none" } }}
               >
                 <MenuIcon />
               </IconButton>
@@ -188,27 +155,18 @@ export default function NavBar(props: Props) {
               <Box
                 component="img"
                 src="/images/logo.png"
-                sx={{ height: { xs: 20, sm: 30, md: 35 }, my: 2, mx: 2 }}
+                sx={{ height: { xs: 20, sm: 30, lg: 35 }, my: 2, mx: 2 }}
               />
             </ButtonBase>
-            <Search sx={{ mx: "auto" }}>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="ค้นหากิจกรรม"
-                inputProps={{ "aria-label": "search" }}
-                sx={{ fontSize: { xs: 14, md: 16 } }}
-              />
-            </Search>
+            <SearchEvents />
             {session ? (
               <Box sx={{ mx: "auto" }}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ mx: 2 }}>
                   <Avatar
                     src={session.user?.image || ""}
                     sx={{
-                      width: { xs: 30, md: 40 },
-                      height: { xs: 30, md: 40 },
+                      width: { xs: 30, lg: 40 },
+                      height: { xs: 30, lg: 40 },
                     }}
                   />
                 </IconButton>
@@ -286,7 +244,7 @@ export default function NavBar(props: Props) {
               <Button
                 color="inherit"
                 onClick={handleSignIn}
-                sx={{ mx: "auto", fontSize: { xs: 12, md: 14 } }}
+                sx={{ mx: "auto", fontSize: { xs: 12, lg: 14 } }}
               >
                 เข้าสู่ระบบ
               </Button>
@@ -297,8 +255,8 @@ export default function NavBar(props: Props) {
           <Box
             component="nav"
             sx={{
-              width: { md: drawerWidth },
-              flexShrink: { md: 0 },
+              width: { lg: drawerWidth },
+              flexShrink: { lg: 0 },
               zIndex: 2,
             }}
             aria-label="menu items"
@@ -312,7 +270,7 @@ export default function NavBar(props: Props) {
                 keepMounted: true,
               }}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: { xs: "block", lg: "none" },
                 "& .MuiDrawer-paper": {
                   boxSizing: "border-box",
                   width: drawerWidth,
@@ -326,7 +284,7 @@ export default function NavBar(props: Props) {
             <Drawer
               variant="permanent"
               sx={{
-                display: { xs: "none", md: "block" },
+                display: { xs: "none", lg: "block" },
                 "& .MuiDrawer-paper": {
                   boxSizing: "border-box",
                   width: drawerWidth,
@@ -345,7 +303,7 @@ export default function NavBar(props: Props) {
             flexGrow: 1,
             p: 3,
             my: 2,
-            width: { md: `calc(100% - ${drawerWidth}px)` },
+            width: { lg: `calc(100% - ${drawerWidth}px)` },
           }}
         >
           <Toolbar />
