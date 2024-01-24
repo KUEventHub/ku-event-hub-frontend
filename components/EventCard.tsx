@@ -31,7 +31,8 @@ export interface Event {
   startTime: Date;
   endTime: Date;
   location: string;
-  joinedUsers: [];
+  participantsCount: number;
+  isActive: boolean;
 }
 
 interface EventCardProps {
@@ -93,6 +94,7 @@ export default function EventCard({ events }: EventCardProps) {
                         fontWeight: "bold",
                         mr: 2,
                         display: "inline-block",
+                        mb: 1,
                       }}
                     >
                       {eventType.name}
@@ -198,7 +200,7 @@ export default function EventCard({ events }: EventCardProps) {
                       <span style={{ margin: 6 }}>
                         (ลงทะเบียนแล้ว
                         <span style={{ margin: 6 }}>
-                          {item.joinedUsers.length}
+                          {item.participantsCount}
                         </span>
                         คน)
                       </span>
@@ -206,9 +208,9 @@ export default function EventCard({ events }: EventCardProps) {
                   </Box>
                 </CardContent>
                 <Box>
-                  {session && session.user.role.includes("User") && (
-                    <JoinEventButton />
-                  )}
+                  {session &&
+                    session.user.role.includes("User") &&
+                    item.isActive && <JoinEventButton />}
                   {session && session.user.role.includes("Admin") && (
                     <Box
                       sx={{
