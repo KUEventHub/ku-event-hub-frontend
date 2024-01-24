@@ -5,6 +5,7 @@ import { Box, CircularProgress, Container, Typography } from "@mui/material";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getEvents } from "@/services/events";
 import InfiniteScroll from "react-infinite-scroller";
+import EventNotFound from "@/components/EventNotFound";
 
 export default function Home() {
   const { data, isLoading, hasNextPage, fetchNextPage } = useInfiniteQuery({
@@ -64,13 +65,11 @@ export default function Home() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              height: "70vh",
+              height: "60vh",
               justifyContent: "center",
             }}
           >
-            <Box sx={{ display: "flex", justifyContent: "center", mx: "auto" }}>
-              ไม่พบกิจกรรม
-            </Box>
+            <EventNotFound />
           </Box>
         ) : (
           <InfiniteScroll

@@ -17,6 +17,8 @@ import { searchEvents } from "@/services/events";
 import { eventTypes } from "@/utils/eventTypes";
 import SearchIcon from "@mui/icons-material/Search";
 import InfiniteScroll from "react-infinite-scroller";
+import { sortTypes } from "@/utils/sortTypes";
+import EventNotFound from "@/components/EventNotFound";
 
 export default function Events() {
   const pageSize = 20;
@@ -149,11 +151,11 @@ export default function Events() {
                     }}
                     color="secondary"
                   >
-                    <MenuItem value="0">วันที่สร้างกิจกรรมล่าสุด</MenuItem>
-                    <MenuItem value="1">
-                      วันที่เริ่มต้นกิจกรรมเร็วที่สุด
-                    </MenuItem>
-                    <MenuItem value="2">จำนวนผู้เข้าร่วมมากที่สุด</MenuItem>
+                    {sortTypes.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>
@@ -186,9 +188,7 @@ export default function Events() {
               justifyContent: "center",
             }}
           >
-            <Box sx={{ display: "flex", justifyContent: "center", mx: "auto" }}>
-              ไม่พบกิจกรรม
-            </Box>
+            <EventNotFound />
           </Box>
         ) : (
           <InfiniteScroll

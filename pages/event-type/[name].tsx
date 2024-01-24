@@ -16,6 +16,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { eventTypes } from "@/utils/eventTypes";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
+import { sortTypes } from "@/utils/sortTypes";
+import EventNotFound from "@/components/EventNotFound";
 
 export default function EventTypePage() {
   const router = useRouter();
@@ -136,9 +138,11 @@ export default function EventTypePage() {
                   }}
                   color="secondary"
                 >
-                  <MenuItem value="0">วันที่สร้างกิจกรรมล่าสุด</MenuItem>
-                  <MenuItem value="1">วันที่เริ่มต้นกิจกรรมเร็วที่สุด</MenuItem>
-                  <MenuItem value="2">จำนวนผู้เข้าร่วมมากที่สุด</MenuItem>
+                  {sortTypes.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -172,9 +176,7 @@ export default function EventTypePage() {
             justifyContent: "center",
           }}
         >
-          <Box sx={{ display: "flex", justifyContent: "center", mx: "auto" }}>
-            ไม่พบกิจกรรม
-          </Box>
+          <EventNotFound />
         </Box>
       ) : (
         <InfiniteScroll hasMore={hasNextPage} loadMore={() => fetchNextPage()}>
