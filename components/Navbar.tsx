@@ -27,7 +27,10 @@ import EventIcon from "@mui/icons-material/Event";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useQuery } from "@tanstack/react-query";
+import { getUserMenu } from "@/services/users";
 import SearchEvents from "./SearchEvents";
+import { useEffect } from "react";
 
 interface Props {
   window?: () => Window;
@@ -41,6 +44,22 @@ export default function NavBar(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { data: session } = useSession();
   const router = useRouter();
+
+  const { data } = useQuery({
+    queryKey: ["user"],
+    queryFn: () => getUserMenu(),
+  });
+
+  useEffect(() => {
+    if (session) {
+      if (data?.status === 404) {
+        if (router.pathname === "/create-profile") {
+          return;
+        }
+        router.push("/create-profile");
+      }
+    }
+  }, [session, data, router]);
 
   const handleSignOut = () => {
     signOut({ callbackUrl: "/" });
@@ -72,6 +91,11 @@ export default function NavBar(props: Props) {
     } else {
       setMobileOpen(false);
     }
+  };
+
+  const handleCreateProfileMenu = () => {
+    setAnchorElUser(null);
+    router.push("/create-profile");
   };
 
   const menuItems = [
@@ -163,7 +187,9 @@ export default function NavBar(props: Props) {
               <Box sx={{ mx: "auto" }}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ mx: 2 }}>
                   <Avatar
-                    src={session.user?.image || ""}
+                    src={
+                      data?.user?.profilePictureUrl || session.user?.image || ""
+                    }
                     sx={{
                       width: { xs: 30, lg: 40 },
                       height: { xs: 30, lg: 40 },
@@ -186,51 +212,67 @@ export default function NavBar(props: Props) {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <Box
-                    component="div"
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      mx: 2,
-                      mt: 1,
-                      mb: 2,
-                    }}
-                  >
-                    <Avatar src={session.user?.image || ""} />
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        ml: 1,
-                        minWidth: 100,
-                        maxWidth: 150,
-                      }}
-                    >
-                      <Typography variant="body2" noWrap>
-                        {session.user?.name}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        noWrap
-                        color="text.secondary"
-                      >
-                        {session.user?.email}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Divider sx={{ my: 1 }} />
-                  {session && session.user.role.includes("User") && (
+                  {data && data.user ? (
                     <Box>
-                      <MenuItem onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center" variant="body2">
-                          ดูโปรไฟล์
-                        </Typography>
-                      </MenuItem>
-                      <MenuItem onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center" variant="body2">
-                          แก้ไขข้อมูลส่วนตัว
-                        </Typography>
-                      </MenuItem>
+                      <Box
+                        component="div"
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          mx: 2,
+                          mt: 1,
+                          mb: 2,
+                        }}
+                      >
+                        <Avatar src={data?.user.profilePictureUrl || ""} />
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            ml: 1,
+                            minWidth: 100,
+                            maxWidth: 150,
+                          }}
+                        >
+                          <Typography variant="body2" noWrap>
+                            {data?.user.username}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            noWrap
+                            color="text.secondary"
+                          >
+                            {data?.user.email}
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Divider sx={{ my: 1 }} />
+
+                      {session && session.user.role.includes("User") && (
+                        <Box>
+                          <MenuItem onClick={handleCloseUserMenu}>
+                            <Typography textAlign="center" variant="body2">
+                              ดูโปรไฟล์
+                            </Typography>
+                          </MenuItem>
+                          <MenuItem onClick={handleCloseUserMenu}>
+                            <Typography textAlign="center" variant="body2">
+                              แก้ไขข้อมูลส่วนตัว
+                            </Typography>
+                          </MenuItem>
+                        </Box>
+                      )}
+                    </Box>
+                  ) : (
+                    <Box>
+                      {data?.status === 404 && (
+                        <MenuItem onClick={handleCreateProfileMenu}>
+                          <Typography textAlign="center" variant="body2">
+                            สร้างโปรไฟล์
+                          </Typography>
+                        </MenuItem>
+                      )}
                     </Box>
                   )}
                   <MenuItem onClick={handleSignOut}>
