@@ -13,3 +13,11 @@ export function formatDate(dateTime: Date) {
 export function formatTime(dateTime: Date) {
   return format(dateTime, "HH:mm น.");
 }
+
+export function formatDateInput(dateTime: Date) {
+  return format(dateTime, "yyyy-MM-dd");
+}
+
+export function formatTimeInput(dateTime: Date) {
+  return format(dateTime, "HH:mm");
+}

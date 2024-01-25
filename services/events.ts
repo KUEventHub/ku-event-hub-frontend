@@ -33,3 +33,22 @@ export const searchEvents = (
     .catch(() => {
       return null;
     });
+
+export const getEventInfo = (id: string) =>
+  api
+    .get(`/api/events/${id}`)
+    .then((response) => response.data)
+    .catch(() => {
+      return null;
+    });
+
+export const getEventInfoForEdit = (id: string) =>
+  api
+    .get(`/api/events/${id}/edit`)
+    .then((response) => response.data)
+    .catch(() => {
+      return null;
+    });
+
+export const editEventInfo = (id: string, data: EventData) =>
+  api.post(`/api/events/${id}/edit`, data).then((response) => response.data);

@@ -64,7 +64,7 @@ export default function EventCard({ events }: EventCardProps) {
                   component="img"
                   height="225"
                   image={item.imageUrl}
-                  sx={{ width: { md: 350 }, flexShrink: 0, mr: 1 }}
+                  sx={{ width: { md: 350 }, flexShrink: 0, mr: 1, my: "auto" }}
                 />
                 <CardContent sx={{ flex: 1, my: "auto" }}>
                   <Typography
@@ -208,9 +208,9 @@ export default function EventCard({ events }: EventCardProps) {
                   </Box>
                 </CardContent>
                 <Box>
-                  {session &&
+                  {/* {session &&
                     session.user.role.includes("User") &&
-                    item.isActive && <JoinEventButton />}
+                    item.isActive && <JoinEventButton />} */}
                   {session && session.user.role.includes("Admin") && (
                     <Box
                       sx={{
@@ -218,7 +218,7 @@ export default function EventCard({ events }: EventCardProps) {
                         flexDirection: { md: "column" },
                       }}
                     >
-                      <EditEventButton />
+                      <EditEventButton id={item._id} />
                       <DeleteEventButton />
                     </Box>
                   )}
