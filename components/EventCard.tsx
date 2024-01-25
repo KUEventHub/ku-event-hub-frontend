@@ -50,7 +50,7 @@ export default function EventCard({ events }: EventCardProps) {
     >
       {events?.map((item) => (
         <Grid item xs={12} sm={4} md={12} key={item._id}>
-          <Link href="/">
+          <Link href={`/events/${item._id}`}>
             <Card
               sx={{
                 maxWidth: "100%",

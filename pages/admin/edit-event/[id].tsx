@@ -174,7 +174,7 @@ export default function EditEvent() {
     setDescription(event.target.value);
   };
 
-  const handleCreateEvent = async () => {
+  const handleEditEvent = async () => {
     const startTime = new Date(`${start_date}T${start_time}`).getTime();
     const endTime = new Date(`${end_date}T${end_time}`).getTime();
 
@@ -235,7 +235,7 @@ export default function EditEvent() {
     try {
       await editEventInfo(id as string, eventData);
       showSnackbar("แก้ไขกิจกรรมสำเร็จ", "success");
-      router.push("/admin/events");
+      router.push(`/events/${id}`);
     } catch (error: any) {
       if (error && error.response) {
         const { status } = error.response;
@@ -642,10 +642,11 @@ export default function EditEvent() {
           <Button
             variant="contained"
             color="secondary"
-            onClick={handleCreateEvent}
+            onClick={handleEditEvent}
             startIcon={
               loading && <CircularProgress size={20} sx={{ color: "white" }} />
             }
+            disabled={loading}
           >
             บันทึกข้อมูล
           </Button>
