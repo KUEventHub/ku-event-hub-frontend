@@ -1,13 +1,17 @@
 import { eventTypes } from "@/utils/eventTypes";
 import { Box, Typography, FormControlLabel, Checkbox } from "@mui/material";
 
-export default function InterestedEventType({ formData, onInputChange }: any) {
+interface InterestedEventTypesProps {
+  interestedEventTypes: string[];
+  onInputChange: (value: string) => void;
+}
+
+export default function InterestedEventTypes({
+  interestedEventTypes,
+  onInputChange,
+}: InterestedEventTypesProps) {
   return (
     <Box>
-      <Typography sx={{ mb: 2, fontWeight: "bold" }} color="text.secondary">
-        ประเภทกิจกรรมที่สนใจ
-      </Typography>
-
       <Box
         sx={{
           width: "100%",
@@ -26,7 +30,7 @@ export default function InterestedEventType({ formData, onInputChange }: any) {
             }
             control={
               <Checkbox
-                checked={formData.interestedEventTypes.includes(item.name)}
+                checked={interestedEventTypes.includes(item.name)}
                 onChange={() => onInputChange(item.name)}
                 size="small"
               />

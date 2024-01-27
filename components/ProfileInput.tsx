@@ -9,10 +9,12 @@ import {
   MenuItem,
   Select,
   Avatar,
+  SelectChangeEvent,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent, useRef } from "react";
 import { facultyList } from "@/utils/facultyList";
+import { showSnackbar } from "@/utils/showSnackbar";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -26,21 +28,46 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function CreateProfile({
+interface ProfileInputProps {
+  formData: {
+    firstName: string;
+    lastName: string;
+    profilePicture: string;
+    username: string;
+    email: string;
+    idCode: string;
+    faculty: string;
+    phoneNumber: string;
+    gender: string;
+    description: string;
+    interestedEventTypes: string[];
+  };
+  onInputChange: (
+    event:
+      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent
+  ) => void;
+  onImageChange: (image: string) => void;
+  editImage: boolean;
+  errors: { [key: string]: boolean };
+}
+
+export default function ProfileInput({
   formData,
   onInputChange,
   onImageChange,
   editImage,
   errors,
-}: any) {
+}: ProfileInputProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
   const convertImageToBase64 = (file: File) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       const base64 = reader.result?.toString().split(",")[1];
-      onImageChange(base64);
+      onImageChange(base64 as string);
     };
     reader.onerror = (error) => {
       console.log(error);
@@ -49,7 +76,15 @@ export default function CreateProfile({
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      convertImageToBase64(event.target.files[0]);
+      const file = event.target.files[0];
+      if (imageInputRef.current) {
+        imageInputRef.current.value = "";
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        showSnackbar("รูปภาพต้องมีขนาดไม่เกิน 5 MB", "error");
+        return;
+      }
+      convertImageToBase64(file);
     }
   };
 
@@ -61,16 +96,6 @@ export default function CreateProfile({
         justifyContent: "center",
       }}
     >
-      <Typography
-        component="h1"
-        sx={{
-          fontWeight: "bold",
-          fontSize: "18px",
-          textAlign: "center",
-        }}
-      >
-        สร้างโปรไฟล์
-      </Typography>
       <Box
         sx={{
           display: "flex",
@@ -94,7 +119,7 @@ export default function CreateProfile({
           แก้ไขรูปภาพ
           <VisuallyHiddenInput
             type="file"
-            accept="image/*"
+            accept=".png, .jpeg, .jpg"
             onChange={handleImageChange}
             ref={imageInputRef}
           />
@@ -176,11 +201,16 @@ export default function CreateProfile({
               width: "100%",
             }}
             InputProps={{ inputProps: { maxLength: 20 } }}
-            error={errors.username}
+            error={errors.username || errors.duplicateUsername}
           />
           {errors.username && (
             <Typography variant="caption" color="error">
               กรุณากรอก Username อย่างน้อย 4 ตัว และไม่เกิน 20 ตัว
+            </Typography>
+          )}
+          {errors.duplicateUsername && (
+            <Typography variant="caption" color="error">
+              Username นี้ถูกใช้ไปแล้ว
             </Typography>
           )}
         </Grid>

@@ -1,5 +1,5 @@
-import CreateProfile from "@/components/CreateProfile";
-import InterestedEventType from "@/components/InterestedEventTypes";
+import ProfileInput from "@/components/ProfileInput";
+import InterestedEventTypes from "@/components/InterestedEventTypes";
 import { UserMenu } from "@/interfaces/User";
 import { createUser } from "@/services/users";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
@@ -10,6 +10,7 @@ import {
   CircularProgress,
   Container,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -40,6 +41,7 @@ export default function CreateProfilePage() {
     username: false,
     idCode: false,
     phoneNumber: false,
+    duplicateUsername: false,
   });
   const [loading, setLoading] = useState(false);
 
@@ -86,7 +88,7 @@ export default function CreateProfilePage() {
   };
 
   const handleInputChange = (
-    event: ChangeEvent<HTMLInputElement> | SelectChangeEvent
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
   ) => {
     const { name, value } = event.target;
     if (
@@ -145,9 +147,22 @@ export default function CreateProfilePage() {
       window.location.href = "/";
     } catch (error: any) {
       if (error && error.response) {
-        const { status } = error.response;
+        const { status, data } = error.response;
         if (status === 401) {
           SessionExpiredPopup();
+        } else if (status === 400) {
+          if (data.keyValue) {
+            const newErrors = {
+              duplicateUsername: data.keyValue.username ? true : false,
+            };
+            setErrors({});
+            if (newErrors.duplicateUsername) {
+              setStep(1);
+              setErrors(newErrors);
+              setLoading(false);
+              return;
+            }
+          }
         } else {
           showSnackbar("สร้างโปรไฟล์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง", "error");
         }
@@ -173,19 +188,40 @@ export default function CreateProfilePage() {
         }}
       >
         {step === 1 && (
-          <CreateProfile
-            formData={formData}
-            onInputChange={handleInputChange}
-            onImageChange={handleImageChange}
-            editImage={editImage}
-            errors={errors}
-          />
+          <Box>
+            <Typography
+              component="h1"
+              sx={{
+                fontWeight: "bold",
+                fontSize: "18px",
+                textAlign: "center",
+              }}
+            >
+              สร้างโปรไฟล์
+            </Typography>
+            <ProfileInput
+              formData={formData}
+              onInputChange={handleInputChange}
+              onImageChange={handleImageChange}
+              editImage={editImage}
+              errors={errors}
+            />
+          </Box>
         )}
         {step === 2 && (
-          <InterestedEventType
-            formData={formData}
-            onInputChange={handleCheckboxChange}
-          />
+          <Box>
+            <Typography
+              sx={{ mb: 2, fontWeight: "bold" }}
+              color="text.secondary"
+            >
+              ประเภทกิจกรรมที่สนใจ
+            </Typography>
+
+            <InterestedEventTypes
+              interestedEventTypes={formData.interestedEventTypes}
+              onInputChange={handleCheckboxChange}
+            />
+          </Box>
         )}
 
         <Box
@@ -208,6 +244,7 @@ export default function CreateProfilePage() {
                 },
               }}
               onClick={handlePrevious}
+              disabled={loading}
             >
               ย้อนกลับ
             </Button>
@@ -240,6 +277,7 @@ export default function CreateProfilePage() {
                   <CircularProgress size={20} sx={{ color: "white" }} />
                 )
               }
+              disabled={loading}
             >
               เสร็จสิ้น
             </Button>
