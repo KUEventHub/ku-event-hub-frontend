@@ -25,3 +25,21 @@ export interface UserMenu {
     profilePictureUrl: string;
   };
 }
+
+export interface EditUserInfo {
+  user: {
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+    idCode?: string;
+    faculty?: string;
+    phoneNumber?: string;
+    gender?: string;
+    description?: string;
+    profilePicture?: {
+      url?: string;
+      base64Image?: string;
+    };
+    interestedEventTypes?: string[];
+  };
+}

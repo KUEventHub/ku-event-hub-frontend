@@ -98,6 +98,11 @@ export default function NavBar(props: Props) {
     router.push("/create-profile");
   };
 
+  const handleEditProfileMenu = () => {
+    setAnchorElUser(null);
+    router.push("/profile/edit");
+  };
+
   const menuItems = [
     {
       href: "/admin/user-account",
@@ -256,7 +261,7 @@ export default function NavBar(props: Props) {
                               ดูโปรไฟล์
                             </Typography>
                           </MenuItem>
-                          <MenuItem onClick={handleCloseUserMenu}>
+                          <MenuItem onClick={handleEditProfileMenu}>
                             <Typography textAlign="center" variant="body2">
                               แก้ไขข้อมูลส่วนตัว
                             </Typography>

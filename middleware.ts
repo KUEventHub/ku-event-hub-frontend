@@ -16,4 +16,4 @@ export default withAuth(
   }
 )
 
-export const config = { matcher: ["/admin/:path*", "/create-profile"] }
+export const config = { matcher: ["/admin/:path*", "/create-profile", "/profile/edit"] }
