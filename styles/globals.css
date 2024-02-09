@@ -45,3 +45,7 @@ a {
 .session-expired-popup .swal2-title {
   margin-top: 0.75em;
 }
+
+.custom-popup-title .swal2-title {
+  margin-top: 0.75em;
+}

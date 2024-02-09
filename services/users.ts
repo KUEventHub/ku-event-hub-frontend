@@ -1,6 +1,6 @@
 import { getSession } from "next-auth/react";
 import api from "./api";
-import { CreateUser, EditUserInfo } from "@/interfaces/User";
+import { CreateUser, EditUserInfo, EditUserPrivacy } from "@/interfaces/User";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
 
 export const createUser = (data: CreateUser) =>
@@ -42,3 +42,8 @@ export const getUserInfoForEdit = (id: string) =>
 
 export const editUserInfo = (id: string, data: EditUserInfo) =>
   api.post(`/api/users/${id}/edit`, data).then((response) => response.data);
+
+export const editUserPrivacy = (id: string, data: EditUserPrivacy) =>
+  api
+    .post(`/api/users/${id}/edit-privacy`, data)
+    .then((response) => response.data);

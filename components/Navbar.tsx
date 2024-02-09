@@ -48,6 +48,7 @@ export default function NavBar(props: Props) {
   const { data } = useQuery({
     queryKey: ["user"],
     queryFn: () => getUserMenu(),
+    enabled: !!session,
   });
 
   useEffect(() => {
@@ -57,6 +58,11 @@ export default function NavBar(props: Props) {
           return;
         }
         router.push("/create-profile");
+      }
+      if (router.pathname === "/create-profile") {
+        if (data && data.user) {
+          router.back();
+        }
       }
     }
   }, [session, data, router]);
@@ -96,6 +102,11 @@ export default function NavBar(props: Props) {
   const handleCreateProfileMenu = () => {
     setAnchorElUser(null);
     router.push("/create-profile");
+  };
+
+  const handleProfileMenu = () => {
+    setAnchorElUser(null);
+    router.push(`/profile/${data?.user?._id}`);
   };
 
   const handleEditProfileMenu = () => {
@@ -256,7 +267,7 @@ export default function NavBar(props: Props) {
 
                       {session && session.user.role.includes("User") && (
                         <Box>
-                          <MenuItem onClick={handleCloseUserMenu}>
+                          <MenuItem onClick={handleProfileMenu}>
                             <Typography textAlign="center" variant="body2">
                               ดูโปรไฟล์
                             </Typography>

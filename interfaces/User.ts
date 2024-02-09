@@ -43,3 +43,11 @@ export interface EditUserInfo {
     interestedEventTypes?: string[];
   };
 }
+
+export interface EditUserPrivacy {
+  user: {
+    showUserInformation?: boolean;
+    showEvents?: boolean;
+    showFriends?: boolean;
+  };
+}

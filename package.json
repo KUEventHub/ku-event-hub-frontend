@@ -22,6 +22,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-infinite-scroller": "^1.2.6",
+    "react-material-ui-carousel": "^3.4.2",
     "sweetalert2": "^11.10.3",
     "sweetalert2-react-content": "^5.0.7"
   },
