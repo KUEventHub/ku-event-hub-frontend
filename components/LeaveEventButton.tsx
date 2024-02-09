@@ -1,4 +1,4 @@
-import { joinEvent } from "@/services/events";
+import { leaveEvent } from "@/services/events";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
 import { showSnackbar } from "@/utils/showSnackbar";
 import { Button } from "@mui/material";
@@ -9,16 +9,16 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-interface JoinEventButtonProps {
+interface LeaveEventButtonProps {
   _id: string;
 }
 
-export default function JoinEventButton({ _id }: JoinEventButtonProps) {
+export default function LeaveEventButton({ _id }: LeaveEventButtonProps) {
   const queryClient = useQueryClient();
 
-  const handleJoinEvent = () => {
+  const handleLeaveEvent = () => {
     MySwal.fire({
-      title: "ยืนยันการเข้าร่วมกิจกรรม",
+      title: "ยืนยันการออกจากกิจกรรม",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "ยืนยัน",
@@ -30,8 +30,8 @@ export default function JoinEventButton({ _id }: JoinEventButtonProps) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await joinEvent(_id);
-          showSnackbar("เข้าร่วมกิจกรรมสำเร็จ", "success");
+          await leaveEvent(_id);
+          showSnackbar("ออกจากกิจกรรมสำเร็จ", "success");
           queryClient.refetchQueries({ queryKey: ["eventInfo", _id] });
         } catch (error: any) {
           if (error && error.response) {
@@ -40,13 +40,13 @@ export default function JoinEventButton({ _id }: JoinEventButtonProps) {
               SessionExpiredPopup();
             } else {
               showSnackbar(
-                "เข้าร่วมกิจกรรมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+                "ออกจากกิจกรรมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
                 "error"
               );
             }
           } else {
             showSnackbar(
-              "เข้าร่วมกิจกรรมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+              "ออกจากกิจกรรมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
               "error"
             );
           }
@@ -54,15 +54,15 @@ export default function JoinEventButton({ _id }: JoinEventButtonProps) {
       }
     });
   };
-  
+
   return (
     <Button
       size="small"
-      color="secondary"
+      color="error"
       variant="contained"
-      onClick={handleJoinEvent}
+      onClick={handleLeaveEvent}
     >
-      เข้าร่วมกิจกรรม
+      ออกจากกิจกรรม
     </Button>
   );
 }

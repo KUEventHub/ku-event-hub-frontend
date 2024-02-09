@@ -163,19 +163,32 @@ export default function EventCard({ events }: EventCardProps) {
                     </Typography>
                   </Box>
 
-                  <Typography
-                    variant="body2"
-                    gutterBottom
-                    color="text.secondary"
+                  <Box
+                    component="div"
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      fontSize: { xs: 12, md: 14 },
                     }}
+                    color="text.secondary"
                   >
                     <PlaceIcon sx={{ mr: 1 }} />
-                    {item.location}
-                  </Typography>
+
+                    <Typography
+                      variant="body2"
+                      gutterBottom
+                      color="text.secondary"
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 1,
+                        fontSize: { xs: 12, md: 14 },
+                      }}
+                    >
+                      {item.location}
+                    </Typography>
+                  </Box>
 
                   <Box
                     component="div"

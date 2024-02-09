@@ -26,6 +26,7 @@ import UserCard, { UserCardProps } from "@/components/UserCard";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import EventNotFound from "@/components/EventNotFound";
+import LeaveEventButton from "@/components/LeaveEventButton";
 
 const style = {
   position: "absolute" as "absolute",
@@ -39,6 +40,7 @@ const style = {
   borderRadius: 1,
   boxShadow: 2,
   p: 1,
+  overflow: "scroll",
 };
 
 export default function EventInfoPage() {
@@ -270,7 +272,15 @@ export default function EventInfoPage() {
                   <Box>
                     {session &&
                       session.user.role.includes("User") &&
-                      data.event.isActive && <JoinEventButton />}
+                      data.event.isActive && (
+                        <Box sx={{ m: { xs: 2, md: 3 }, mt: { xs: 0, md: 3 } }}>
+                          {data.event.userHasJoinedEvent ? (
+                            <LeaveEventButton _id={id as string} />
+                          ) : (
+                            <JoinEventButton _id={id as string} />
+                          )}
+                        </Box>
+                      )}
                     {session && session.user.role.includes("Admin") && (
                       <Box
                         sx={{
@@ -307,7 +317,7 @@ export default function EventInfoPage() {
             <Typography
               sx={{ fontSize: "16px" }}
               color="text.secondary"
-              component="pre"
+              whiteSpace="pre-line"
             >
               {data.event.description}
             </Typography>
@@ -330,16 +340,18 @@ export default function EventInfoPage() {
             </Typography>
 
             {data.event.participants.length > 0 ? (
-              <>
+              <Grid container spacing={2}>
                 {data.event.participants.map((participant: UserCardProps) => (
-                  <UserCard
-                    key={participant._id}
-                    _id={participant._id}
-                    name={participant.name}
-                    profilePictureUrl={participant.profilePictureUrl}
-                  />
+                  <Grid item xs={12} md={6} key={participant._id}>
+                    <UserCard
+                      _id={participant._id}
+                      name={participant.name}
+                      profilePictureUrl={participant.profilePictureUrl}
+                      isSelf={participant.isSelf}
+                    />
+                  </Grid>
                 ))}
-              </>
+              </Grid>
             ) : (
               <Box
                 sx={{

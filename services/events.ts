@@ -52,3 +52,9 @@ export const getEventInfoForEdit = (id: string) =>
 
 export const editEventInfo = (id: string, data: EventData) =>
   api.post(`/api/events/${id}/edit`, data).then((response) => response.data);
+
+export const joinEvent = (id: string) =>
+  api.post(`/api/events/${id}/join`).then((response) => response.data);
+
+export const leaveEvent = (id: string) =>
+  api.post(`/api/events/${id}/leave`).then((response) => response.data);
