@@ -103,7 +103,9 @@ export default function ProfilePage() {
                       >
                         <ShowUserInformationSetting
                           _id={user._id}
-                          showUserInformation={user.information.show}
+                          showUserInformation={
+                            user.privacySettings.showUserInformation
+                          }
                         />
                       </Box>
                     )}
@@ -296,7 +298,9 @@ export default function ProfilePage() {
                             >
                               <ShowUserInformationSetting
                                 _id={user._id}
-                                showUserInformation={user.information.show}
+                                showUserInformation={
+                                  user.privacySettings.showUserInformation
+                                }
                               />
                             </Box>
                           ) : (
@@ -341,7 +345,7 @@ export default function ProfilePage() {
                 user.isSameUser && (
                   <ShowEventsSetting
                     _id={user._id}
-                    showEvents={user.events.show}
+                    showEvents={user.privacySettings.showEvents}
                   />
                 )}
             </Box>
@@ -441,7 +445,7 @@ export default function ProfilePage() {
                 user.isSameUser && (
                   <ShowFriendsSetting
                     _id={user._id}
-                    showFriends={user.friends.show}
+                    showFriends={user.privacySettings.showFriends}
                   />
                 )}
             </Box>
