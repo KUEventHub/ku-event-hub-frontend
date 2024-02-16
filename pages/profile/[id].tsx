@@ -337,7 +337,7 @@ export default function ProfilePage() {
                                 <AddFriendButton _id={user._id} />
                               ) : user.friendsInformation &&
                                 user.friendsInformation
-                                  .hasOutgoingFriendRequest && (
+                                  .hasOutgoingFriendRequest ? (
                                 <Button
                                   variant="contained"
                                   sx={{
@@ -350,6 +350,20 @@ export default function ProfilePage() {
                                 >
                                   ส่งคำขอแล้ว
                                 </Button>
+                              ) : (
+                                user.friendsInformation &&
+                                user.friendsInformation
+                                  .hasReceivedFriendRequest && (
+                                  <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => {
+                                      router.push("/friend-request");
+                                    }}
+                                  >
+                                    ตอบรับคำขอ
+                                  </Button>
+                                )
                               )}
                             </Box>
                           )}

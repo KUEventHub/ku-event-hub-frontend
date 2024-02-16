@@ -31,16 +31,20 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserMenu } from "@/services/users";
 import SearchEvents from "./SearchEvents";
 import { useEffect } from "react";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EditIcon from "@mui/icons-material/Edit";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Logout from "@mui/icons-material/Logout";
 
 interface Props {
-  window?: () => Window;
   children: React.ReactNode;
 }
 
 const drawerWidth = 275;
 
 export default function NavBar(props: Props) {
-  const { window, children } = props;
+  const { children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { data: session } = useSession();
   const router = useRouter();
@@ -114,6 +118,11 @@ export default function NavBar(props: Props) {
     router.push("/profile/edit");
   };
 
+  const handleFriendRequestMenu = () => {
+    setAnchorElUser(null);
+    router.push("/friend-request");
+  };
+
   const menuItems = [
     {
       href: "/admin/user-account",
@@ -170,9 +179,6 @@ export default function NavBar(props: Props) {
       ))}
     </List>
   );
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <>
@@ -268,13 +274,27 @@ export default function NavBar(props: Props) {
                       {session && session.user.role.includes("User") && (
                         <Box>
                           <MenuItem onClick={handleProfileMenu}>
+                            <ListItemIcon>
+                              <AccountBoxIcon fontSize="small" />
+                            </ListItemIcon>
                             <Typography textAlign="center" variant="body2">
                               ดูโปรไฟล์
                             </Typography>
                           </MenuItem>
                           <MenuItem onClick={handleEditProfileMenu}>
+                            <ListItemIcon>
+                              <EditIcon fontSize="small" />
+                            </ListItemIcon>
                             <Typography textAlign="center" variant="body2">
                               แก้ไขข้อมูลส่วนตัว
+                            </Typography>
+                          </MenuItem>
+                          <MenuItem onClick={handleFriendRequestMenu}>
+                            <ListItemIcon>
+                              <PersonAdd fontSize="small" />
+                            </ListItemIcon>
+                            <Typography textAlign="center" variant="body2">
+                              คำขอเป็นเพื่อน
                             </Typography>
                           </MenuItem>
                         </Box>
@@ -284,6 +304,9 @@ export default function NavBar(props: Props) {
                     <Box>
                       {data?.status === 404 && (
                         <MenuItem onClick={handleCreateProfileMenu}>
+                          <ListItemIcon>
+                            <AccountCircleIcon fontSize="small" />
+                          </ListItemIcon>
                           <Typography textAlign="center" variant="body2">
                             สร้างโปรไฟล์
                           </Typography>
@@ -292,6 +315,9 @@ export default function NavBar(props: Props) {
                     </Box>
                   )}
                   <MenuItem onClick={handleSignOut}>
+                    <ListItemIcon>
+                      <Logout fontSize="small" />
+                    </ListItemIcon>
                     <Typography textAlign="center" variant="body2">
                       ออกจากระบบ
                     </Typography>
@@ -320,7 +346,6 @@ export default function NavBar(props: Props) {
             aria-label="menu items"
           >
             <Drawer
-              container={container}
               variant="temporary"
               open={mobileOpen}
               onClose={handleDrawerToggle}
