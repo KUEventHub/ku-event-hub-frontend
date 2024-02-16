@@ -34,7 +34,7 @@ export default function UserCard({
       }}
     >
       <Link href={`/profile/${_id}`}>
-        <Grid container wrap="nowrap" spacing={2} alignItems="center">
+        <Grid container wrap="wrap" spacing={2} alignItems="center">
           <Grid item>
             <Avatar src={profilePictureUrl} />
           </Grid>
@@ -43,7 +43,7 @@ export default function UserCard({
           </Grid>
           {session && session.user.role.includes("User") && !isSelf && (
             <Grid item>
-              <AddFriendButton />
+              <AddFriendButton _id={_id} />
             </Grid>
           )}
         </Grid>

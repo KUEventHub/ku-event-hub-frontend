@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   CircularProgress,
@@ -17,7 +18,8 @@ import PeopleIcon from "@mui/icons-material/People";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonIcon from "@mui/icons-material/Person";
-import UserCard, { UserCardProps } from "@/components/UserCard";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import UserCard from "@/components/UserCard";
 import ShowUserInformationSetting from "@/components/ShowUserInformationSetting";
 import ShowEventsSetting from "@/components/ShowEventsSetting";
 import ShowFriendsSetting from "@/components/ShowFriendsSetting";
@@ -25,6 +27,7 @@ import ParticipatingEventCard, {
   ParticipatingEventCardProps,
 } from "@/components/ParticipatingEventCard";
 import Carousel from "react-material-ui-carousel";
+import { FriendCard } from "@/interfaces/Friend";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -305,9 +308,49 @@ export default function ProfilePage() {
                             </Box>
                           ) : (
                             <Box
-                              sx={{ m: { xs: 2, sm: 1 }, mt: { xs: 0, sm: 1 } }}
+                              sx={{
+                                m: { xs: 2, sm: 1 },
+                                mt: { xs: 0, sm: 1 },
+                              }}
                             >
-                              <AddFriendButton />
+                              {user.friendsInformation &&
+                              user.friendsInformation.isFriend ? (
+                                <Button
+                                  variant="contained"
+                                  sx={{
+                                    backgroundColor: "#dadada",
+                                    color: "black",
+                                    ":hover": {
+                                      backgroundColor: "#dadada",
+                                    },
+                                  }}
+                                  startIcon={<HowToRegIcon fontSize="small" />}
+                                >
+                                  เพื่อน
+                                </Button>
+                              ) : user.friendsInformation &&
+                                !user.friendsInformation.isFriend &&
+                                !user.friendsInformation
+                                  .hasOutgoingFriendRequest &&
+                                !user.friendsInformation
+                                  .hasReceivedFriendRequest ? (
+                                <AddFriendButton _id={user._id} />
+                              ) : user.friendsInformation &&
+                                user.friendsInformation
+                                  .hasOutgoingFriendRequest && (
+                                <Button
+                                  variant="contained"
+                                  sx={{
+                                    backgroundColor: "gray",
+                                    color: "white",
+                                    ":hover": {
+                                      backgroundColor: "text.secondary",
+                                    },
+                                  }}
+                                >
+                                  ส่งคำขอแล้ว
+                                </Button>
+                              )}
                             </Box>
                           )}
                         </>
@@ -451,15 +494,15 @@ export default function ProfilePage() {
             </Box>
 
             {user.friends?.friends?.length > 0 ? (
-              <Grid container spacing={2}>
-                {user.friends.friends.map((friend: UserCardProps) => (
+              <Grid container spacing={2} sx={{ p: 1.5 }}>
+                {user.friends.friends.map((friend: FriendCard) => (
                   <Grid item xs={12} md={6} key={friend._id}>
                     <UserCard
                       key={friend._id}
                       _id={friend._id}
-                      name={friend.name}
+                      name={friend.username}
                       profilePictureUrl={friend.profilePictureUrl}
-                      isSelf={friend.isSelf}
+                      isSelf={true}
                     />
                   </Grid>
                 ))}

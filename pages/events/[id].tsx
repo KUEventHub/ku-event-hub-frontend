@@ -270,17 +270,34 @@ export default function EventInfoPage() {
                     </Box>
                   </CardContent>
                   <Box>
-                    {session &&
-                      session.user.role.includes("User") &&
-                      data.event.isActive && (
-                        <Box sx={{ m: { xs: 2, md: 3 }, mt: { xs: 0, md: 3 } }}>
-                          {data.event.userHasJoinedEvent ? (
-                            <LeaveEventButton _id={id as string} />
-                          ) : (
-                            <JoinEventButton _id={id as string} />
-                          )}
-                        </Box>
-                      )}
+                    {session && session.user.role.includes("User") && (
+                      <Box sx={{ m: { xs: 2, md: 3 }, mt: { xs: 0, md: 3 } }}>
+                        {data.event.isActive ? (
+                          <>
+                            {data.event.userHasJoinedEvent ? (
+                              <LeaveEventButton _id={id as string} />
+                            ) : (
+                              <JoinEventButton _id={id as string} />
+                            )}
+                          </>
+                        ) : (
+                          data.event.userHasJoinedEvent && (
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                p: 1,
+                                bgcolor: "gray",
+                                borderRadius: 2,
+                                color: "white",
+                                fontSize: 13,
+                              }}
+                            >
+                              เข้าร่วมกิจกรรมแล้ว
+                            </Typography>
+                          )
+                        )}
+                      </Box>
+                    )}
                     {session && session.user.role.includes("Admin") && (
                       <Box
                         sx={{
@@ -347,7 +364,7 @@ export default function EventInfoPage() {
                       _id={participant._id}
                       name={participant.name}
                       profilePictureUrl={participant.profilePictureUrl}
-                      isSelf={participant.isSelf}
+                      isSelf={true}
                     />
                   </Grid>
                 ))}
