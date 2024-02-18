@@ -1,3 +1,4 @@
+import { lastLogin } from '@/services/users';
 import NextAuth from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import Auth0Provider from 'next-auth/providers/auth0';
@@ -40,6 +41,13 @@ export const authOptions: NextAuthOptions = {
       session.accessToken = token.accessToken;
       session.idToken = token.idToken;
       return session;
+    },
+  },
+  events: {
+    async signIn({ account }) {
+      if (account && account.access_token) {
+        await lastLogin(account.access_token);
+      }
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

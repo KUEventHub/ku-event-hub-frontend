@@ -47,3 +47,12 @@ export const editUserPrivacy = (id: string, data: EditUserPrivacy) =>
   api
     .post(`/api/users/${id}/edit-privacy`, data)
     .then((response) => response.data);
+
+export const lastLogin = (access_token: string) =>
+  api
+    .post("/api/users/login", null, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+    .then((response) => response);
