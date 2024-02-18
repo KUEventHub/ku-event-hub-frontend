@@ -20,6 +20,10 @@ import { showSnackbar } from "@/utils/showSnackbar";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
 import { eventTypes } from "@/utils/eventTypes";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import {
+  isStartDateAfterEndDate,
+  isStartTimeAfterEndTime,
+} from "@/utils/validateDateTime";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -59,6 +63,8 @@ export default function CreateEvent() {
     description: false,
     type: false,
     base64Image: false,
+    validateDate: false,
+    validateTime: false,
   });
   const [loading, setLoading] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -136,21 +142,7 @@ export default function CreateEvent() {
   };
 
   const handleCancel = () => {
-    setName("");
-    setType("");
-    setBase64Image("");
-    setActivityHours("");
-    setTotalSeat("");
-    setStartDate("");
-    setEndDate("");
-    setStartTime("");
-    setEndTime("");
-    setLocation("");
-    setDescription("");
-    if (imageInputRef.current) {
-      imageInputRef.current.value = "";
-    }
-    setErrors({});
+    router.back();
   };
 
   const handleCreateEvent = async () => {
@@ -189,6 +181,13 @@ export default function CreateEvent() {
       description: !description,
       type: !type,
       base64Image: !base64Image,
+      validateDate: isStartDateAfterEndDate(start_date, end_date),
+      validateTime: isStartTimeAfterEndTime(
+        start_time,
+        end_time,
+        start_date,
+        end_date
+      ),
     };
 
     if (
@@ -202,7 +201,9 @@ export default function CreateEvent() {
       newErrors.location ||
       newErrors.description ||
       newErrors.type ||
-      newErrors.base64Image
+      newErrors.base64Image ||
+      newErrors.validateDate ||
+      newErrors.validateTime
     ) {
       setErrors(newErrors);
       return;
@@ -478,12 +479,18 @@ export default function CreateEvent() {
                 bgcolor: "#F1F1F1",
                 width: "100%",
               }}
-              error={errors.start_date}
+              error={errors.start_date || errors.validateDate}
             />
-            {errors.start_date && (
+            {errors.start_date ? (
               <Typography color="error" variant="caption">
                 กรุณาเลือกวันที่เริ่มต้นกิจกรรม
               </Typography>
+            ) : (
+              errors.validateDate && (
+                <Typography color="error" variant="caption">
+                  วันที่เริ่มต้นกิจกรรมต้องน้อยกว่าหรือเท่ากับวันที่สิ้นสุดกิจกรรม
+                </Typography>
+              )
             )}
           </Grid>
           <Grid item xs={16} lg={4}>
@@ -509,12 +516,18 @@ export default function CreateEvent() {
                 bgcolor: "#F1F1F1",
                 width: "100%",
               }}
-              error={errors.end_date}
+              error={errors.end_date || errors.validateDate}
             />
-            {errors.end_date && (
+            {errors.end_date ? (
               <Typography color="error" variant="caption">
                 กรุณาเลือกวันที่สิ้นสุดกิจกรรม
               </Typography>
+            ) : (
+              errors.validateDate && (
+                <Typography color="error" variant="caption">
+                  วันที่สิ้นสุดกิจกรรมต้องมากกว่าหรือเท่ากับวันที่เริ่มต้นกิจกรรม
+                </Typography>
+              )
             )}
           </Grid>
           <Grid item xs={16} lg={4}>
@@ -540,12 +553,18 @@ export default function CreateEvent() {
                 bgcolor: "#F1F1F1",
                 width: "100%",
               }}
-              error={errors.start_time}
+              error={errors.start_time || errors.validateTime}
             />
-            {errors.start_time && (
+            {errors.start_time ? (
               <Typography color="error" variant="caption">
                 กรุณาเลือกเวลาเริ่มต้นกิจกรรม
               </Typography>
+            ) : (
+              errors.validateTime && (
+                <Typography color="error" variant="caption">
+                  เวลาเริ่มต้นกิจกรรมต้องน้อยกว่าเวลาสิ้นสุดกิจกรรม
+                </Typography>
+              )
             )}
           </Grid>
           <Grid item xs={16} lg={4}>
@@ -571,12 +590,18 @@ export default function CreateEvent() {
                 bgcolor: "#F1F1F1",
                 width: "100%",
               }}
-              error={errors.start_time}
+              error={errors.end_time || errors.validateTime}
             />
-            {errors.start_time && (
+            {errors.end_time ? (
               <Typography color="error" variant="caption">
                 กรุณาเลือกเวลาสิ้นสุดกิจกรรม
               </Typography>
+            ) : (
+              errors.validateTime && (
+                <Typography color="error" variant="caption">
+                  เวลาสิ้นสุดกิจกรรมต้องมากกว่าเวลาเริ่มต้นกิจกรรม
+                </Typography>
+              )
             )}
           </Grid>
         </Grid>
@@ -657,6 +682,7 @@ export default function CreateEvent() {
               },
             }}
             onClick={handleCancel}
+            disabled={loading}
           >
             ยกเลิก
           </Button>
@@ -667,6 +693,7 @@ export default function CreateEvent() {
             startIcon={
               loading && <CircularProgress size={20} sx={{ color: "white" }} />
             }
+            disabled={loading}
           >
             สร้างกิจกรรม
           </Button>

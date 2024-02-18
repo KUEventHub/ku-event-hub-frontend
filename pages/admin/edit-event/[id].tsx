@@ -21,6 +21,10 @@ import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
 import { eventTypes } from "@/utils/eventTypes";
 import { useQuery } from "@tanstack/react-query";
 import { formatDateInput, formatTimeInput } from "@/utils/formatDateTime";
+import {
+  isStartDateAfterEndDate,
+  isStartTimeAfterEndTime,
+} from "@/utils/validateDateTime";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -75,6 +79,8 @@ export default function EditEvent() {
     description: false,
     type: false,
     base64Image: false,
+    validateDate: false,
+    validateTime: false,
   });
   const [loading, setLoading] = useState(false);
   const [editImage, setEditImage] = useState(false);
@@ -211,6 +217,13 @@ export default function EditEvent() {
       description: !description,
       type: !type,
       base64Image: !base64Image,
+      validateDate: isStartDateAfterEndDate(start_date, end_date),
+      validateTime: isStartTimeAfterEndTime(
+        start_time,
+        end_time,
+        start_date,
+        end_date
+      ),
     };
 
     if (
@@ -224,7 +237,9 @@ export default function EditEvent() {
       newErrors.location ||
       newErrors.description ||
       newErrors.type ||
-      newErrors.base64Image
+      newErrors.base64Image ||
+      newErrors.validateDate ||
+      newErrors.validateTime
     ) {
       setErrors(newErrors);
       return;
@@ -471,12 +486,18 @@ export default function EditEvent() {
                 bgcolor: "#F1F1F1",
                 width: "100%",
               }}
-              error={errors.start_date}
+              error={errors.start_date || errors.validateDate}
             />
-            {errors.start_date && (
+            {errors.start_date ? (
               <Typography color="error" variant="caption">
                 กรุณาเลือกวันที่เริ่มต้นกิจกรรม
               </Typography>
+            ) : (
+              errors.validateDate && (
+                <Typography color="error" variant="caption">
+                  วันที่เริ่มต้นกิจกรรมต้องน้อยกว่าหรือเท่ากับวันที่สิ้นสุดกิจกรรม
+                </Typography>
+              )
             )}
           </Grid>
           <Grid item xs={16} lg={4}>
@@ -502,12 +523,18 @@ export default function EditEvent() {
                 bgcolor: "#F1F1F1",
                 width: "100%",
               }}
-              error={errors.end_date}
+              error={errors.end_date || errors.validateDate}
             />
-            {errors.end_date && (
+            {errors.end_date ? (
               <Typography color="error" variant="caption">
                 กรุณาเลือกวันที่สิ้นสุดกิจกรรม
               </Typography>
+            ) : (
+              errors.validateDate && (
+                <Typography color="error" variant="caption">
+                  วันที่สิ้นสุดกิจกรรมต้องมากกว่าหรือเท่ากับวันที่เริ่มต้นกิจกรรม
+                </Typography>
+              )
             )}
           </Grid>
           <Grid item xs={16} lg={4}>
@@ -533,12 +560,18 @@ export default function EditEvent() {
                 bgcolor: "#F1F1F1",
                 width: "100%",
               }}
-              error={errors.start_time}
+              error={errors.start_time || errors.validateTime}
             />
-            {errors.start_time && (
+            {errors.start_time ? (
               <Typography color="error" variant="caption">
                 กรุณาเลือกเวลาเริ่มต้นกิจกรรม
               </Typography>
+            ) : (
+              errors.validateTime && (
+                <Typography color="error" variant="caption">
+                  เวลาเริ่มต้นกิจกรรมต้องน้อยกว่าเวลาสิ้นสุดกิจกรรม
+                </Typography>
+              )
             )}
           </Grid>
           <Grid item xs={16} lg={4}>
@@ -564,12 +597,18 @@ export default function EditEvent() {
                 bgcolor: "#F1F1F1",
                 width: "100%",
               }}
-              error={errors.start_time}
+              error={errors.end_time || errors.validateTime}
             />
-            {errors.start_time && (
+            {errors.end_time ? (
               <Typography color="error" variant="caption">
                 กรุณาเลือกเวลาสิ้นสุดกิจกรรม
               </Typography>
+            ) : (
+              errors.validateTime && (
+                <Typography color="error" variant="caption">
+                  เวลาสิ้นสุดกิจกรรมต้องมากกว่าเวลาเริ่มต้นกิจกรรม
+                </Typography>
+              )
             )}
           </Grid>
         </Grid>
