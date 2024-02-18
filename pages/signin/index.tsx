@@ -3,7 +3,8 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
+import { GetServerSidePropsContext } from "next";
 
 export default function SignIn() {
   const handleSignIn = () => {
@@ -65,4 +66,16 @@ export default function SignIn() {
       </Box>
     </Container>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getSession(context);
+
+  if (session) {
+    return { redirect: { destination: "/" } };
+  }
+
+  return {
+    props: {},
+  };
 }
