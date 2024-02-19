@@ -21,3 +21,9 @@ export function formatDateInput(dateTime: Date) {
 export function formatTimeInput(dateTime: Date) {
   return format(dateTime, "HH:mm");
 }
+
+export function formatDateTime(dateTime: Date) {
+  return new Date(dateTime).toLocaleString("th-TH", {
+    timeZone: "Asia/Bangkok",
+  });
+}

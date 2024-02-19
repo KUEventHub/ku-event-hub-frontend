@@ -51,3 +51,13 @@ export interface EditUserPrivacy {
     showFriends?: boolean;
   };
 }
+
+export interface UserList {
+  _id: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
+  loginTime: string;
+}
