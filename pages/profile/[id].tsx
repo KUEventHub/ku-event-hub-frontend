@@ -18,7 +18,6 @@ import PeopleIcon from "@mui/icons-material/People";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonIcon from "@mui/icons-material/Person";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
 import UserCard from "@/components/UserCard";
 import ShowUserInformationSetting from "@/components/ShowUserInformationSetting";
 import ShowEventsSetting from "@/components/ShowEventsSetting";
@@ -28,6 +27,7 @@ import ParticipatingEventCard, {
 } from "@/components/ParticipatingEventCard";
 import Carousel from "react-material-ui-carousel";
 import { FriendCard } from "@/interfaces/Friend";
+import MyFriendButton from "@/components/MyFriendButton";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -315,19 +315,10 @@ export default function ProfilePage() {
                             >
                               {user.friendsInformation &&
                               user.friendsInformation.isFriend ? (
-                                <Button
-                                  variant="contained"
-                                  sx={{
-                                    backgroundColor: "#dadada",
-                                    color: "black",
-                                    ":hover": {
-                                      backgroundColor: "#dadada",
-                                    },
-                                  }}
-                                  startIcon={<HowToRegIcon fontSize="small" />}
-                                >
-                                  เพื่อน
-                                </Button>
+                                <MyFriendButton
+                                  _id={user._id}
+                                  username={user.username}
+                                />
                               ) : user.friendsInformation &&
                                 !user.friendsInformation.isFriend &&
                                 !user.friendsInformation
@@ -339,6 +330,7 @@ export default function ProfilePage() {
                                 user.friendsInformation
                                   .hasOutgoingFriendRequest ? (
                                 <Button
+                                  size="small"
                                   variant="contained"
                                   sx={{
                                     backgroundColor: "gray",
@@ -355,6 +347,7 @@ export default function ProfilePage() {
                                 user.friendsInformation
                                   .hasReceivedFriendRequest && (
                                   <Button
+                                    size="small"
                                     variant="contained"
                                     color="secondary"
                                     onClick={() => {

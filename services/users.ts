@@ -56,3 +56,6 @@ export const lastLogin = (access_token: string) =>
       },
     })
     .then((response) => response);
+
+export const unfriend = (id: string) =>
+  api.post(`/api/users/${id}/unfriend`).then((response) => response.data);

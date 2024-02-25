@@ -5,6 +5,7 @@ import { Avatar, Box } from "@mui/material";
 import Link from "next/link";
 import AcceptFriendRequestButton from "./AcceptFriendRequestButton";
 import RejectFriendRequestButton from "./RejectFriendRequestButton";
+import CancelFriendRequestButton from "./CancelFriendRequestButton";
 
 export interface FriendRequestCardProps {
   userId: string;
@@ -42,7 +43,7 @@ export default function FriendRequestCard({
             <Typography noWrap>{username}</Typography>
           </Grid>
           <Grid item>
-            {action === "received" && (
+            {action === "received" ? (
               <Box sx={{ display: "flex" }}>
                 <Box>
                   <RejectFriendRequestButton _id={_id} />
@@ -51,6 +52,12 @@ export default function FriendRequestCard({
                   <AcceptFriendRequestButton _id={_id} />
                 </Box>
               </Box>
+            ) : (
+              action === "sent" && (
+                <Box sx={{ display: "flex" }}>
+                  <CancelFriendRequestButton _id={_id} />
+                </Box>
+              )
             )}
           </Grid>
         </Grid>

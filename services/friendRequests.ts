@@ -30,3 +30,8 @@ export const rejectFriendRequest = (id: string) =>
   api
     .post(`/api/friend-requests/${id}/reject`)
     .then((response) => response.data);
+
+export const cancelFriendRequest = (id: string) =>
+  api
+    .post(`/api/friend-requests/${id}/cancel`)
+    .then((response) => response.data);
