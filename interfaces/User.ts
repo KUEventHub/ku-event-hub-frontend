@@ -63,3 +63,16 @@ export interface UserList {
   role: string;
   isBanned: boolean;
 }
+
+export interface BannedUserList {
+  _id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  profilePictureUrl: string;
+  ban: {
+    _id: string;
+    time: Date;
+    reason: string;
+  };
+}
