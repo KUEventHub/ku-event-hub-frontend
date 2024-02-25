@@ -120,7 +120,7 @@ export default function NavBar(props: Props) {
 
   const handleFriendRequestMenu = () => {
     setAnchorElUser(null);
-    router.push("/friend-request");
+    router.push("/friend-request/received");
   };
 
   const menuItems = [

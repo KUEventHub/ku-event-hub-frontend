@@ -339,6 +339,9 @@ export default function ProfilePage() {
                                       backgroundColor: "text.secondary",
                                     },
                                   }}
+                                  onClick={() => {
+                                    router.push("/friend-request/sent");
+                                  }}
                                 >
                                   ส่งคำขอแล้ว
                                 </Button>
@@ -351,7 +354,7 @@ export default function ProfilePage() {
                                     variant="contained"
                                     color="secondary"
                                     onClick={() => {
-                                      router.push("/friend-request");
+                                      router.push("/friend-request/received");
                                     }}
                                   >
                                     ตอบรับคำขอ
