@@ -10,46 +10,34 @@ import {
   Avatar,
   Box,
   CircularProgress,
-  IconButton,
+  FormControlLabel,
+  FormGroup,
+  Switch,
   TablePagination,
   TableSortLabel,
   Tooltip,
+  Typography,
 } from "@mui/material";
-import BlockIcon from "@mui/icons-material/Block";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import { useQuery } from "@tanstack/react-query";
 import { getUserList } from "@/services/admin";
 import { UserList } from "@/interfaces/User";
 import { useRouter } from "next/router";
 import { formatDateTime } from "@/utils/formatDateTime";
+import UserAccountActionsButton from "./UserAccountActionsButton";
 
 export default function UserAccountTable() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [pageNumber, setPageNumber] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(20);
+  const [includeAdmins, setIncludeAdmins] = React.useState(false);
   const [sortBy, setSortBy] = React.useState<string | null>("loginTime");
   const [sortOrder, setSortOrder] = React.useState<"asc" | "desc">("desc");
-
-  const open = Boolean(anchorEl);
 
   const router = useRouter();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["userList", pageNumber, pageSize],
-    queryFn: () => getUserList(pageNumber, pageSize),
+    queryKey: ["userList", pageNumber, pageSize, includeAdmins],
+    queryFn: () => getUserList(pageNumber, pageSize, includeAdmins),
   });
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setAnchorEl(null);
-  };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPageNumber(newPage);
@@ -83,9 +71,11 @@ export default function UserAccountTable() {
         : valueB.localeCompare(valueA);
     } else {
       return sortOrder === "asc"
-        ? a[sortBy as keyof UserList].localeCompare(b[sortBy as keyof UserList])
-        : b[sortBy as keyof UserList].localeCompare(
-            a[sortBy as keyof UserList]
+        ? (a[sortBy as keyof UserList] as string).localeCompare(
+            b[sortBy as keyof UserList] as string
+          )
+        : (b[sortBy as keyof UserList] as string).localeCompare(
+            a[sortBy as keyof UserList] as string
           );
     }
   });
@@ -133,6 +123,17 @@ export default function UserAccountTable() {
                     Last Login
                   </TableSortLabel>
                 </TableCell>
+                {includeAdmins && (
+                  <TableCell>
+                    <TableSortLabel
+                      active={sortBy === "role"}
+                      direction={sortBy === "role" ? sortOrder : "asc"}
+                      onClick={() => handleSort("role")}
+                    >
+                      Role
+                    </TableSortLabel>
+                  </TableCell>
+                )}
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -174,41 +175,13 @@ export default function UserAccountTable() {
                     <TableCell>
                       {formatDateTime(new Date(row.loginTime))}
                     </TableCell>
+                    {includeAdmins && <TableCell>{row.role}</TableCell>}
                     <TableCell align="right" width={75}>
-                      <Tooltip title="Actions">
-                        <IconButton
-                          id="basic-button"
-                          aria-controls={open ? "basic-menu" : undefined}
-                          aria-haspopup="true"
-                          aria-expanded={open ? "true" : undefined}
-                          onClick={handleClick}
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          "aria-labelledby": "basic-button",
-                        }}
-                        transformOrigin={{
-                          horizontal: "right",
-                          vertical: "top",
-                        }}
-                        anchorOrigin={{
-                          horizontal: "right",
-                          vertical: "bottom",
-                        }}
-                      >
-                        <MenuItem onClick={handleClose} sx={{ fontSize: 14 }}>
-                          <BlockIcon sx={{ mr: 1 }} fontSize="small" />
-                          ระงับผู้ใช้
-                        </MenuItem>
-                      </Menu>
+                      <UserAccountActionsButton
+                        id={row._id}
+                        username={row.username}
+                        isBanned={row.isBanned}
+                      />
                     </TableCell>
                   </TableRow>
                 ))
@@ -222,15 +195,39 @@ export default function UserAccountTable() {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 20, 50]}
-          component="div"
-          count={data?.totalUsers ? data.totalUsers : 0}
-          rowsPerPage={pageSize}
-          page={data?.totalUsers ? pageNumber : 0}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <FormGroup sx={{ ml: 3, mr: "auto" }}>
+            <Tooltip
+              title={includeAdmins ? "ซ่อนรายชื่อ Admin" : "แสดงรายชื่อ Admin"}
+              placement="bottom-start"
+            >
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={includeAdmins}
+                    onChange={() => setIncludeAdmins(!includeAdmins)}
+                    size="small"
+                    color="default"
+                  />
+                }
+                label={
+                  <Typography variant="body2" color="gray" sx={{ ml: 1 }}>
+                    Admin
+                  </Typography>
+                }
+              />
+            </Tooltip>
+          </FormGroup>
+          <TablePagination
+            rowsPerPageOptions={[10, 20, 50]}
+            component="div"
+            count={data?.totalUsers ? data.totalUsers : 0}
+            rowsPerPage={pageSize}
+            page={data?.totalUsers ? pageNumber : 0}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Box>
       </Box>
     </Paper>
   );

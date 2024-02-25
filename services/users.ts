@@ -59,3 +59,11 @@ export const lastLogin = (access_token: string) =>
 
 export const unfriend = (id: string) =>
   api.post(`/api/users/${id}/unfriend`).then((response) => response.data);
+
+export const banUser = (id: string, reason: string) =>
+  api
+    .post(`/api/users/${id}/ban`, { reason })
+    .then((response) => response.data);
+
+export const unbanUser = (id: string) =>
+  api.post(`/api/users/${id}/unban`).then((response) => response.data);

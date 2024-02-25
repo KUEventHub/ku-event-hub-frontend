@@ -60,4 +60,6 @@ export interface UserList {
   lastName: string;
   profilePictureUrl: string;
   loginTime: string;
+  role: string;
+  isBanned: boolean;
 }
