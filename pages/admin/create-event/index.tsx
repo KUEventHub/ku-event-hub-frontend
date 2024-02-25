@@ -18,7 +18,7 @@ import { ChangeEvent, useRef, useState } from "react";
 import { createEvent } from "@/services/events";
 import { showSnackbar } from "@/utils/showSnackbar";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
-import { eventTypes } from "@/utils/eventTypes";
+import { eventTypesForAdmin } from "@/utils/eventTypes";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import {
   isStartDateAfterEndDate,
@@ -358,7 +358,7 @@ export default function CreateEvent() {
                 color="secondary"
                 error={errors.type}
               >
-                {eventTypes.map((item, index) => (
+                {eventTypesForAdmin.map((item, index) => (
                   <MenuItem key={index} value={item.name}>
                     {item.name}
                   </MenuItem>

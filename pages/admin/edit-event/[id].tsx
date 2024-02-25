@@ -18,7 +18,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { editEventInfo, getEventInfoForEdit } from "@/services/events";
 import { showSnackbar } from "@/utils/showSnackbar";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
-import { eventTypes } from "@/utils/eventTypes";
+import { eventTypesForAdmin } from "@/utils/eventTypes";
 import { useQuery } from "@tanstack/react-query";
 import { formatDateInput, formatTimeInput } from "@/utils/formatDateTime";
 import {
@@ -365,7 +365,7 @@ export default function EditEvent() {
                 color="secondary"
                 error={errors.type}
               >
-                {eventTypes.map((item, index) => (
+                {eventTypesForAdmin.map((item, index) => (
                   <MenuItem key={index} value={item.name}>
                     {item.name}
                   </MenuItem>
