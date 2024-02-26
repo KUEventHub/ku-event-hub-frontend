@@ -58,3 +58,6 @@ export const joinEvent = (id: string) =>
 
 export const leaveEvent = (id: string) =>
   api.post(`/api/events/${id}/leave`).then((response) => response.data);
+
+export const deactivateEvent = (id: string) =>
+  api.post(`/api/events/${id}/deactivate`).then((response) => response.data);

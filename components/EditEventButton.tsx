@@ -14,7 +14,6 @@ export default function EditEvent({ id }: EditEventProps) {
       size="small"
       color="secondary"
       variant="contained"
-      sx={{ ml: 2, mb: 2, mr: { md: 3 }, mt: { md: 3 } }}
       onClick={(e) => {
         e.preventDefault();
         router.push(`/admin/edit-event/${id}`);

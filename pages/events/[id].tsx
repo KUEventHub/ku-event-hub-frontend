@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -97,26 +98,51 @@ export default function EventInfoPage() {
                   component="div"
                   sx={{
                     p: 2,
-                    bgcolor: "#EAEAEA",
+                    bgcolor: "#dadada",
                   }}
                 >
                   {data.event.name}
                 </Typography>
 
                 <Box sx={{ display: { md: "flex" }, width: { md: "100%" } }}>
-                  <CardMedia
-                    onClick={handleOpen}
-                    component="img"
-                    height="250"
-                    image={data.event.imageUrl}
+                  <Box
                     sx={{
-                      width: { md: 400 },
-                      flexShrink: 0,
-                      m: { md: 2 },
-                      borderRadius: { md: 1 },
-                      cursor: "pointer",
+                      position: "relative",
+                      my: "auto",
                     }}
-                  />
+                  >
+                    <CardMedia
+                      onClick={handleOpen}
+                      component="img"
+                      height="250"
+                      image={data.event.imageUrl}
+                      sx={{
+                        width: { md: 400 },
+                        flexShrink: 0,
+                        m: { md: 2 },
+                        borderRadius: { md: 1 },
+                        cursor: "pointer",
+                      }}
+                    />
+                    {!data.event.isActive && (
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          bgcolor: "#EAEAEA",
+                          fontWeight: "bold",
+                          borderRadius: 2,
+                          p: 1,
+                          m: 2,
+                          display: { xs: "initial", md: "none" },
+                        }}
+                      >
+                        กิจกรรมสิ้นสุดแล้ว
+                      </Typography>
+                    )}
+                  </Box>
                   <Modal
                     open={open}
                     onClose={handleClose}
@@ -270,6 +296,20 @@ export default function EventInfoPage() {
                     </Box>
                   </CardContent>
                   <Box>
+                    {!data.event.isActive && (
+                      <Button
+                        disabled
+                        variant="contained"
+                        size="small"
+                        sx={{
+                          display: { xs: "none", md: "initial" },
+                          m: 2,
+                          mb: 0,
+                        }}
+                      >
+                        กิจกรรมสิ้นสุดแล้ว
+                      </Button>
+                    )}
                     {session && session.user.role.includes("User") && (
                       <Box sx={{ m: { xs: 2, md: 3 }, mt: { xs: 0, md: 3 } }}>
                         {data.event.isActive ? (
@@ -301,12 +341,19 @@ export default function EventInfoPage() {
                     {session && session.user.role.includes("Admin") && (
                       <Box
                         sx={{
-                          display: { md: "flex" },
-                          flexDirection: { md: "column" },
+                          display: "flex",
+                          flexDirection: { xs: "row", md: "column" },
+                          flexWrap: "wrap",
+                          m: 2,
+                          mt: { xs: 0, md: 2 },
                         }}
+                        gap={2}
                       >
                         <EditEventButton id={id as string} />
-                        <DeleteEventButton />
+                        <DeleteEventButton
+                          id={id as string}
+                          name={data.event.name}
+                        />
                       </Box>
                     )}
                   </Box>

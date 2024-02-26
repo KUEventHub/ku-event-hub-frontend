@@ -13,7 +13,6 @@ import CardMedia from "@mui/material/CardMedia";
 import Link from "next/link";
 import EditEventButton from "./EditEventButton";
 import DeleteEventButton from "./DeleteEventButton";
-import JoinEventButton from "./JoinEventButton";
 import { formatDate, formatTime } from "@/utils/formatDateTime";
 
 interface EventTypes {
@@ -60,13 +59,50 @@ export default function EventCard({ events }: EventCardProps) {
               }}
             >
               <Box sx={{ display: { md: "flex" }, width: { md: "100%" } }}>
-                <CardMedia
-                  component="img"
-                  height="225"
-                  image={item.imageUrl}
-                  sx={{ width: { md: 350 }, flexShrink: 0, mr: 1, my: "auto" }}
-                />
-                <CardContent sx={{ flex: 1, my: "auto" }}>
+                <Box
+                  sx={{
+                    position: "relative",
+                    opacity: item.isActive ? "initial" : 0.7,
+                    my: "auto",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="225"
+                    image={item.imageUrl}
+                    sx={{
+                      width: { md: 350 },
+                      flexShrink: 0,
+                      mr: 1,
+                      my: "auto",
+                    }}
+                  />
+                  {!item.isActive && (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        bgcolor: "#EAEAEA",
+                        fontWeight: "bold",
+                        borderRadius: 2,
+                        p: 1,
+                        m: 2,
+                        display: { xs: "initial", md: "none" },
+                      }}
+                    >
+                      กิจกรรมสิ้นสุดแล้ว
+                    </Typography>
+                  )}
+                </Box>
+                <CardContent
+                  sx={{
+                    flex: 1,
+                    my: "auto",
+                    opacity: item.isActive ? "initial" : 0.7,
+                  }}
+                >
                   <Typography
                     gutterBottom
                     variant="subtitle1"
@@ -220,20 +256,37 @@ export default function EventCard({ events }: EventCardProps) {
                     </Typography>
                   </Box>
                 </CardContent>
-                <Box>
-                  {/* {session &&
-                    session.user.role.includes("User") &&
-                    item.isActive && <JoinEventButton />} */}
-                  {session && session.user.role.includes("Admin") && (
-                    <Box
-                      sx={{
-                        display: { md: "flex" },
-                        flexDirection: { md: "column" },
-                      }}
+                <Box
+                  sx={{
+                    display:
+                      session?.user.role.includes("Admin") || !item.isActive
+                        ? "flex"
+                        : "none",
+                    flexDirection: { xs: "row", md: "column" },
+                    flexWrap: "wrap",
+                    m: {
+                      xs: session?.user.role.includes("Admin") ? 2 : 0,
+                      md: 3,
+                    },
+                    mt: { xs: 0, md: 3 },
+                  }}
+                  gap={2}
+                >
+                  {!item.isActive && (
+                    <Button
+                      disabled
+                      variant="contained"
+                      size="small"
+                      sx={{ display: { xs: "none", md: "initial" } }}
                     >
+                      กิจกรรมสิ้นสุดแล้ว
+                    </Button>
+                  )}
+                  {session && session.user.role.includes("Admin") && (
+                    <>
                       <EditEventButton id={item._id} />
-                      <DeleteEventButton />
-                    </Box>
+                      <DeleteEventButton id={item._id} name={item.name} />
+                    </>
                   )}
                 </Box>
               </Box>
