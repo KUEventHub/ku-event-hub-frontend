@@ -69,3 +69,9 @@ export const leaveEvent = (id: string) =>
 
 export const deactivateEvent = (id: string) =>
   api.post(`/api/events/${id}/deactivate`).then((response) => response.data);
+
+export const getQRCode = (id: string) =>
+  api.get(`/api/events/${id}/qrcode`).then((response) => response.data);
+
+export const createQRCode = (id: string) =>
+  api.post(`/api/events/${id}/qrcode`).then((response) => response.data);

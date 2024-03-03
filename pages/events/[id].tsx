@@ -28,6 +28,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import EventNotFound from "@/components/EventNotFound";
 import LeaveEventButton from "@/components/LeaveEventButton";
+import QRCodeButton from "@/components/QRCodeButton";
 
 const style = {
   position: "absolute" as "absolute",
@@ -295,7 +296,13 @@ export default function EventInfoPage() {
                       </Typography>
                     </Box>
                   </CardContent>
-                  <Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "row", md: "column" },
+                      flexWrap: "wrap",
+                    }}
+                  >
                     {!data.event.isActive && (
                       <Button
                         disabled
@@ -311,7 +318,16 @@ export default function EventInfoPage() {
                       </Button>
                     )}
                     {session && session.user.role.includes("User") && (
-                      <Box sx={{ m: { xs: 2, md: 3 }, mt: { xs: 0, md: 3 } }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: { xs: "row", md: "column" },
+                          flexWrap: "wrap",
+                          m: 2,
+                          mt: { xs: 0, md: 2 },
+                        }}
+                        gap={2}
+                      >
                         {data.event.isActive ? (
                           <>
                             {data.event.userHasJoinedEvent ? (
@@ -321,18 +337,21 @@ export default function EventInfoPage() {
                             )}
                           </>
                         ) : (
-                          data.event.userHasJoinedEvent && (
+                          data.event.userHasJoinedEvent &&
+                          !data.event.userHasConfirmedParticipation && (
                             <Typography
                               variant="caption"
                               sx={{
                                 p: 1,
+                                py: 0.5,
                                 bgcolor: "gray",
-                                borderRadius: 2,
+                                borderRadius: 1,
                                 color: "white",
                                 fontSize: 13,
+                                textAlign: "center",
                               }}
                             >
-                              เข้าร่วมกิจกรรมแล้ว
+                              ลงทะเบียนแล้ว
                             </Typography>
                           )
                         )}
@@ -349,6 +368,7 @@ export default function EventInfoPage() {
                         }}
                         gap={2}
                       >
+                        <QRCodeButton id={id as string} />
                         <EditEventButton id={id as string} />
                         <DeleteEventButton
                           id={id as string}
@@ -433,6 +453,57 @@ export default function EventInfoPage() {
               </Box>
             )}
           </Box>
+
+          {session && session.user.role.includes("Admin") && (
+            <Box
+              sx={{
+                bgcolor: "white",
+                p: 3,
+                my: 2,
+                borderRadius: 1,
+                boxShadow: 1,
+              }}
+            >
+              <Typography
+                component="h1"
+                sx={{ mb: 1.5, fontSize: "16px", fontWeight: "bold" }}
+              >
+                ผู้เข้าร่วมกิจกรรมที่ยืนยันแล้ว
+              </Typography>
+
+              {data.event.confirmedParticipants.length > 0 ? (
+                <Grid container spacing={2}>
+                  {data.event.confirmedParticipants.map(
+                    (participant: UserCardProps) => (
+                      <Grid item xs={12} md={6} key={participant._id}>
+                        <UserCard
+                          _id={participant._id}
+                          name={participant.name}
+                          profilePictureUrl={participant.profilePictureUrl}
+                          isSelf={true}
+                        />
+                      </Grid>
+                    )
+                  )}
+                </Grid>
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    mx: "auto",
+                    my: 2,
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                  color="text.secondary"
+                >
+                  <PeopleIcon sx={{ fontSize: 50, mb: 1 }} />
+                  ไม่มีผู้เข้าร่วมกิจกรรมที่ยืนยันแล้ว
+                </Box>
+              )}
+            </Box>
+          )}
         </Box>
       ) : (
         <Box
