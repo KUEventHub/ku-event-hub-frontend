@@ -28,6 +28,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import EventNotFound from "@/components/EventNotFound";
 import LeaveEventButton from "@/components/LeaveEventButton";
+import ScanQRCode from "@/components/ScanQRCode";
 import QRCodeButton from "@/components/QRCodeButton";
 
 const style = {
@@ -328,6 +329,30 @@ export default function EventInfoPage() {
                         }}
                         gap={2}
                       >
+                        {data.event.userHasConfirmedParticipation ? (
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              p: 1,
+                              py: 0.5,
+                              bgcolor: "gray",
+                              borderRadius: 1,
+                              color: "white",
+                              fontSize: 13,
+                              textAlign: "center",
+                            }}
+                          >
+                            เข้าร่วมกิจกรรมแล้ว
+                          </Typography>
+                        ) : (
+                          data.event.hasQrCode &&
+                          data.event.userHasJoinedEvent && (
+                            <ScanQRCode
+                              id={id as string}
+                              name={data.event.name}
+                            />
+                          )
+                        )}
                         {data.event.isActive ? (
                           <>
                             {data.event.userHasJoinedEvent ? (

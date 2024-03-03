@@ -1,5 +1,5 @@
 import api from "./api";
-import { EventData } from "@/interfaces/Event";
+import { CheckQRCode, EventData } from "@/interfaces/Event";
 
 export const getEvents = (pageNumber: number) =>
   api
@@ -75,3 +75,11 @@ export const getQRCode = (id: string) =>
 
 export const createQRCode = (id: string) =>
   api.post(`/api/events/${id}/qrcode`).then((response) => response.data);
+
+export const checkQRCode = (data: CheckQRCode) =>
+  api.post("/api/events/check-qrcode", data).then((response) => response.data);
+
+export const verifyParticipation = (id: string, encryptedString: string) =>
+  api
+    .post(`/api/events/${id}/verify`, { encryptedString })
+    .then((response) => response.data);

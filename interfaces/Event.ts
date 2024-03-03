@@ -13,3 +13,8 @@ export interface EventData {
     };
   };
 }
+
+export interface CheckQRCode {
+  eventId: string;
+  encryptedString: string;
+}
