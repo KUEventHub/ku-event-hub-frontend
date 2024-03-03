@@ -8,7 +8,7 @@ import { GetServerSidePropsContext } from "next";
 
 export default function SignIn() {
   const handleSignIn = () => {
-    signIn("auth0", { callbackUrl: "/" });
+    signIn("auth0");
   };
 
   return (
@@ -72,7 +72,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);
 
   if (session) {
-    return { redirect: { destination: "/" } };
+    const { query } = context;
+    const callbackUrl = query.callbackUrl || "/";
+    return { redirect: { destination: callbackUrl } };
   }
 
   return {

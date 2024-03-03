@@ -72,11 +72,11 @@ export default function NavBar(props: Props) {
   }, [session, data, router]);
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: "/" });
+    signOut();
   };
 
   const handleSignIn = () => {
-    signIn("auth0", { callbackUrl: "/" });
+    signIn("auth0");
   };
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
