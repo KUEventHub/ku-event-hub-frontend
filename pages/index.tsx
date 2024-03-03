@@ -3,14 +3,24 @@ import EventCard from "@/components/EventCard";
 import EventType from "@/components/EventType";
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getEvents } from "@/services/events";
+import { getEvents, getRecommendedEvents } from "@/services/events";
 import InfiniteScroll from "react-infinite-scroller";
 import EventNotFound from "@/components/EventNotFound";
+import { getSession } from "next-auth/react";
 
 export default function Home() {
   const { data, isLoading, hasNextPage, fetchNextPage } = useInfiniteQuery({
     queryKey: ["events"],
-    queryFn: ({ pageParam }) => getEvents(pageParam),
+    queryFn: async ({ pageParam }) => {
+      const session = await getSession();
+      if (session && session.user.role.includes("User")) {
+        const data = await getRecommendedEvents(pageParam);
+        return data;
+      } else {
+        const data = await getEvents(pageParam);
+        return data;
+      }
+    },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const nextPage =

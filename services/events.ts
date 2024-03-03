@@ -9,6 +9,14 @@ export const getEvents = (pageNumber: number) =>
       return null;
     });
 
+export const getRecommendedEvents = (pageNumber: number) =>
+  api
+    .get(`/api/events/recommended?pageNumber=${pageNumber}`)
+    .then((response) => response.data)
+    .catch(() => {
+      return null;
+    });
+
 export const createEvent = (data: EventData) =>
   api.post("/api/events/create", data).then((response) => response.data);
 
