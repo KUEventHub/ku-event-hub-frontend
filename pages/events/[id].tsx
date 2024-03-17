@@ -355,10 +355,14 @@ export default function EventInfoPage() {
                         )}
                         {data.event.isActive ? (
                           <>
-                            {data.event.userHasJoinedEvent ? (
+                            {data.event.userHasJoinedEvent &&
+                            !data.event.userHasConfirmedParticipation ? (
                               <LeaveEventButton _id={id as string} />
                             ) : (
-                              <JoinEventButton _id={id as string} />
+                              !data.event.userHasJoinedEvent &&
+                              !data.event.userHasConfirmedParticipation && (
+                                <JoinEventButton _id={id as string} />
+                              )
                             )}
                           </>
                         ) : (
@@ -398,6 +402,7 @@ export default function EventInfoPage() {
                         <DeleteEventButton
                           id={id as string}
                           name={data.event.name}
+                          participantsCount={data.event.participantsCount}
                         />
                       </Box>
                     )}

@@ -285,7 +285,11 @@ export default function EventCard({ events }: EventCardProps) {
                   {session && session.user.role.includes("Admin") && (
                     <>
                       <EditEventButton id={item._id} />
-                      <DeleteEventButton id={item._id} name={item.name} />
+                      <DeleteEventButton
+                        id={item._id}
+                        name={item.name}
+                        participantsCount={item.participantsCount}
+                      />
                     </>
                   )}
                 </Box>
