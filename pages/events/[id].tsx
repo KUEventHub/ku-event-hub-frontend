@@ -4,11 +4,11 @@ import {
   Card,
   CardContent,
   CardMedia,
-  CircularProgress,
   Container,
   Grid,
   IconButton,
   Modal,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
@@ -69,17 +69,110 @@ export default function EventInfoPage() {
   return (
     <Container component="main" maxWidth="lg">
       {isLoading ? (
-        <Box
-          component="div"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "80vh",
-            justifyContent: "center",
-          }}
-        >
-          <Box sx={{ display: "flex", justifyContent: "center", mx: "auto" }}>
-            <CircularProgress color="primary" />
+        <Box>
+          <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}
+          >
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  maxWidth: "100%",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={{
+                    p: 2,
+                    bgcolor: "#dadada",
+                  }}
+                >
+                  <Skeleton sx={{ width: "80%" }} />
+                </Typography>
+
+                <Box sx={{ display: { md: "flex" }, width: { md: "100%" } }}>
+                  <Skeleton
+                    sx={{
+                      width: { md: 400 },
+                      m: { md: 2 },
+                      borderRadius: { md: 1 },
+                    }}
+                    height={250}
+                    variant="rectangular"
+                  />
+                  <CardContent sx={{ flex: 1, my: "auto" }}>
+                    <Skeleton sx={{ width: 150, height: 40 }} />
+                    <Skeleton
+                      sx={{ width: { xs: "70%", md: "50%" }, height: 40 }}
+                    />
+                    <Skeleton
+                      sx={{ width: { xs: "80%", md: "60%" }, height: 40 }}
+                    />
+                    <Skeleton
+                      sx={{ width: { xs: "60%", md: "40%" }, height: 40 }}
+                    />
+                    <Skeleton
+                      sx={{ width: { xs: "65%", md: "45%" }, height: 40 }}
+                    />
+                  </CardContent>
+                </Box>
+              </Card>
+            </Grid>
+          </Grid>
+
+          <Box
+            sx={{
+              bgcolor: "white",
+              p: 3,
+              my: 2,
+              borderRadius: 1,
+              boxShadow: 1,
+            }}
+          >
+            <Skeleton sx={{ width: 100, height: 40 }} />
+            <Skeleton sx={{ width: "100%", height: 40 }} />
+            <Skeleton sx={{ width: "90%", height: 40 }} />
+          </Box>
+
+          <Box
+            sx={{
+              bgcolor: "white",
+              p: 3,
+              my: 2,
+              borderRadius: 1,
+              boxShadow: 1,
+            }}
+          >
+            <Skeleton sx={{ width: 200, height: 40 }} />
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Box
+                  sx={{
+                    p: 2,
+                    bgcolor: "white",
+                    boxShadow: 1,
+                    borderRadius: 1,
+                    mt: 1,
+                  }}
+                >
+                  <Grid container wrap="wrap" spacing={2} alignItems="center">
+                    <Grid item>
+                      <Skeleton
+                        animation="wave"
+                        variant="circular"
+                        width={40}
+                        height={40}
+                      />
+                    </Grid>
+                    <Grid item xs zeroMinWidth>
+                      <Skeleton sx={{ width: "70%", height: 40 }} />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
       ) : data && data.event ? (

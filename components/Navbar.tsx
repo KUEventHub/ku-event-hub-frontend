@@ -36,6 +36,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 interface Props {
   children: React.ReactNode;
@@ -121,6 +122,11 @@ export default function NavBar(props: Props) {
   const handleFriendRequestMenu = () => {
     setAnchorElUser(null);
     router.push("/friend-request/received");
+  };
+
+  const handleUserEventSummary = () => {
+    setAnchorElUser(null);
+    router.push("/event-summary");
   };
 
   const menuItems = [
@@ -295,6 +301,14 @@ export default function NavBar(props: Props) {
                             </ListItemIcon>
                             <Typography textAlign="center" variant="body2">
                               คำขอเป็นเพื่อน
+                            </Typography>
+                          </MenuItem>
+                          <MenuItem onClick={handleUserEventSummary}>
+                            <ListItemIcon>
+                              <CalendarMonthIcon fontSize="small" />
+                            </ListItemIcon>
+                            <Typography textAlign="center" variant="body2">
+                              กิจกรรมที่เข้าร่วมทั้งหมด
                             </Typography>
                           </MenuItem>
                         </Box>

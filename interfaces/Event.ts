@@ -18,3 +18,34 @@ export interface CheckQRCode {
   eventId: string;
   encryptedString: string;
 }
+
+export interface Event {
+  id: string;
+  name: string;
+  eventTypes: {
+    _id: string;
+    name: string;
+  }[];
+  imageUrl: string;
+  activityHours: number;
+  totalSeats: number;
+  startTime: Date;
+  endTime: Date;
+  location: string;
+  participantsCount: number;
+}
+
+export interface EventSummary {
+  name: string;
+  count: number;
+  hours: number;
+  children: {
+    events?: Event[];
+    subtype?: {
+      name: string;
+      count: number;
+      hours: number;
+      events: Event[];
+    }[];
+  };
+}

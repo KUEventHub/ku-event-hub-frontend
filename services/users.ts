@@ -67,3 +67,11 @@ export const banUser = (id: string, reason: string) =>
 
 export const unbanUser = (id: string) =>
   api.post(`/api/users/${id}/unban`).then((response) => response.data);
+
+export const getUserEventSummary = (filterConfirmed: boolean) =>
+  api
+    .get("/api/users/event-summary", { params: { filterConfirmed } })
+    .then((response) => response.data)
+    .catch(() => {
+      return null;
+    });

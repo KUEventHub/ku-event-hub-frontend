@@ -14,7 +14,7 @@ import { formatDate, formatTime } from "@/utils/formatDateTime";
 export interface ParticipatingEventCardProps {
   _id: string;
   name: string;
-  eventTypes: string[];
+  eventTypes: string;
   imageUrl: string;
   activityHours: number;
   totalSeats: number;
