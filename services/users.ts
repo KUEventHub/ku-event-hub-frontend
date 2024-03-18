@@ -2,6 +2,7 @@ import { getSession } from "next-auth/react";
 import api from "./api";
 import { CreateUser, EditUserInfo, EditUserPrivacy } from "@/interfaces/User";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
+import { BannedUserPopup } from "@/utils/bannedUserPopup";
 
 export const createUser = (data: CreateUser) =>
   api.post("/api/users/create", data).then((response) => response.data);
@@ -12,11 +13,13 @@ export const getUserMenu = () =>
     .then((response) => response.data)
     .catch(async (error) => {
       if (error && error.response) {
-        const { status } = error.response;
+        const { status, data } = error.response;
         const session = await getSession();
         if (session) {
           if (status === 401) {
             SessionExpiredPopup();
+          } else if (status === 403 && data.ban) {
+            BannedUserPopup(data.ban.reason);
           }
           return error.response;
         }
