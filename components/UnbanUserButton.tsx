@@ -1,3 +1,4 @@
+import { updateAuth0User } from "@/services/auth0";
 import { unbanUser } from "@/services/users";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
 import { showSnackbar } from "@/utils/showSnackbar";
@@ -12,11 +13,13 @@ const MySwal = withReactContent(Swal);
 interface UnbanUserButtonProps {
   id: string;
   username: string;
+  auth0UserId: string;
 }
 
 export default function UnbanUserButton({
   id,
   username,
+  auth0UserId,
 }: UnbanUserButtonProps) {
   const [loading, setLoading] = useState(false);
 
@@ -39,10 +42,14 @@ export default function UnbanUserButton({
       if (result.isConfirmed) {
         setLoading(true);
         try {
+          await updateAuth0User(auth0UserId, { blocked: false });
           await unbanUser(id);
           showSnackbar("ยกเลิกการระงับบัญชีผู้ใช้งานแล้ว", "success");
           queryClient.refetchQueries({ queryKey: ["bannedUserList"] });
         } catch (error: any) {
+          await updateAuth0User(auth0UserId, { blocked: true }).catch(() => {
+            return null;
+          });
           if (error && error.response) {
             const { status } = error.response;
             if (status === 401) {

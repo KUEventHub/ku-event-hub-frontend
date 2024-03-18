@@ -16,6 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { showSnackbar } from "@/utils/showSnackbar";
 import { SessionExpiredPopup } from "@/utils/sessionExpiredPopup";
 import { banUser, unbanUser } from "@/services/users";
+import { updateAuth0User } from "@/services/auth0";
 
 const MySwal = withReactContent(Swal);
 
@@ -23,12 +24,14 @@ interface UserAccountActionsButtonProps {
   id: string;
   username: string;
   isBanned: boolean;
+  auth0UserId: string;
 }
 
 export default function UserAccountActionsButton({
   id,
   username,
   isBanned,
+  auth0UserId,
 }: UserAccountActionsButtonProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loading, setLoading] = useState(false);
@@ -69,10 +72,14 @@ export default function UserAccountActionsButton({
         } else {
           setLoading(true);
           try {
+            await updateAuth0User(auth0UserId, { blocked: true });
             await banUser(id, value);
             showSnackbar("ระงับบัญชีผู้ใช้งานสำเร็จ", "success");
             queryClient.refetchQueries({ queryKey: ["userList"] });
           } catch (error: any) {
+            await updateAuth0User(auth0UserId, { blocked: false }).catch(() => {
+              return null;
+            });
             if (error && error.response) {
               const { status } = error.response;
               if (status === 401) {
@@ -114,10 +121,14 @@ export default function UserAccountActionsButton({
       if (result.isConfirmed) {
         setLoading(true);
         try {
+          await updateAuth0User(auth0UserId, { blocked: false });
           await unbanUser(id);
           showSnackbar("ยกเลิกการระงับบัญชีผู้ใช้งานแล้ว", "success");
           queryClient.refetchQueries({ queryKey: ["userList"] });
         } catch (error: any) {
+          await updateAuth0User(auth0UserId, { blocked: true }).catch(() => {
+            return null;
+          });
           if (error && error.response) {
             const { status } = error.response;
             if (status === 401) {

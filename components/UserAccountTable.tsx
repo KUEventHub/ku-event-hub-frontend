@@ -181,6 +181,7 @@ export default function UserAccountTable() {
                         id={row._id}
                         username={row.username}
                         isBanned={row.isBanned}
+                        auth0UserId={row.auth0UserId}
                       />
                     </TableCell>
                   </TableRow>

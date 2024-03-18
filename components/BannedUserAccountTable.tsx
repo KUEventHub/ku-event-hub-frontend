@@ -173,7 +173,11 @@ export default function BannedUserAccountTable() {
                       </Tooltip>
                     </TableCell>
                     <TableCell align="right" width={160}>
-                      <UnbanUserButton id={row._id} username={row.username} />
+                      <UnbanUserButton
+                        id={row._id}
+                        username={row.username}
+                        auth0UserId={row.auth0UserId}
+                      />
                     </TableCell>
                   </TableRow>
                 ))

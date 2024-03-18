@@ -62,6 +62,7 @@ export interface UserList {
   loginTime: string;
   role: string;
   isBanned: boolean;
+  auth0UserId: string;
 }
 
 export interface BannedUserList {
@@ -75,4 +76,9 @@ export interface BannedUserList {
     time: Date;
     reason: string;
   };
+  auth0UserId: string;
+}
+
+export interface Auth0UserData {
+  blocked?: boolean;
 }
