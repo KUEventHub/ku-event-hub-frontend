@@ -294,7 +294,17 @@ export default function EditProfilePage() {
             startIcon={
               loading && <CircularProgress size={20} sx={{ color: "white" }} />
             }
-            disabled={isFormDataUnchanged || loading}
+            disabled={
+              isFormDataUnchanged ||
+              loading ||
+              !formData.firstName ||
+              !formData.lastName ||
+              !formData.username ||
+              !formData.idCode ||
+              !formData.faculty ||
+              !formData.phoneNumber ||
+              !formData.gender
+            }
           >
             บันทึกข้อมูล
           </Button>
