@@ -8,14 +8,14 @@ import AddFriendButton from "./AddFriendButton";
 
 export interface UserCardProps {
   _id: string;
-  name: string;
+  username: string;
   profilePictureUrl: string;
   isSelf: boolean;
 }
 
 export default function UserCard({
   _id,
-  name,
+  username,
   profilePictureUrl,
   isSelf,
 }: UserCardProps) {
@@ -39,7 +39,7 @@ export default function UserCard({
             <Avatar src={profilePictureUrl} />
           </Grid>
           <Grid item xs zeroMinWidth>
-            <Typography noWrap>{name}</Typography>
+            <Typography noWrap>{username}</Typography>
           </Grid>
           {session && session.user.role.includes("User") && !isSelf && (
             <Grid item>

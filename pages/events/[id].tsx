@@ -30,6 +30,7 @@ import EventNotFound from "@/components/EventNotFound";
 import LeaveEventButton from "@/components/LeaveEventButton";
 import ScanQRCode from "@/components/ScanQRCode";
 import QRCodeButton from "@/components/QRCodeButton";
+import ParticipantsTable from "@/components/ParticipantsTable";
 
 const style = {
   position: "absolute" as "absolute",
@@ -547,18 +548,26 @@ export default function EventInfoPage() {
             </Typography>
 
             {data.event.participants.length > 0 ? (
-              <Grid container spacing={2}>
-                {data.event.participants.map((participant: UserCardProps) => (
-                  <Grid item xs={12} md={6} key={participant._id}>
-                    <UserCard
-                      _id={participant._id}
-                      name={participant.name}
-                      profilePictureUrl={participant.profilePictureUrl}
-                      isSelf={true}
-                    />
+              <>
+                {session && session.user.role.includes("Admin") ? (
+                  <ParticipantsTable participants={data.event.participants} />
+                ) : (
+                  <Grid container spacing={2}>
+                    {data.event.participants.map(
+                      (participant: UserCardProps) => (
+                        <Grid item xs={12} md={6} key={participant._id}>
+                          <UserCard
+                            _id={participant._id}
+                            username={participant.username}
+                            profilePictureUrl={participant.profilePictureUrl}
+                            isSelf={true}
+                          />
+                        </Grid>
+                      )
+                    )}
                   </Grid>
-                ))}
-              </Grid>
+                )}
+              </>
             ) : (
               <Box
                 sx={{
@@ -576,57 +585,6 @@ export default function EventInfoPage() {
               </Box>
             )}
           </Box>
-
-          {session && session.user.role.includes("Admin") && (
-            <Box
-              sx={{
-                bgcolor: "white",
-                p: 3,
-                my: 2,
-                borderRadius: 1,
-                boxShadow: 1,
-              }}
-            >
-              <Typography
-                component="h1"
-                sx={{ mb: 1.5, fontSize: "16px", fontWeight: "bold" }}
-              >
-                ผู้เข้าร่วมกิจกรรมที่ยืนยันแล้ว
-              </Typography>
-
-              {data.event.confirmedParticipants.length > 0 ? (
-                <Grid container spacing={2}>
-                  {data.event.confirmedParticipants.map(
-                    (participant: UserCardProps) => (
-                      <Grid item xs={12} md={6} key={participant._id}>
-                        <UserCard
-                          _id={participant._id}
-                          name={participant.name}
-                          profilePictureUrl={participant.profilePictureUrl}
-                          isSelf={true}
-                        />
-                      </Grid>
-                    )
-                  )}
-                </Grid>
-              ) : (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    mx: "auto",
-                    my: 2,
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                  color="text.secondary"
-                >
-                  <PeopleIcon sx={{ fontSize: 50, mb: 1 }} />
-                  ไม่มีผู้เข้าร่วมกิจกรรมที่ยืนยันแล้ว
-                </Box>
-              )}
-            </Box>
-          )}
         </Box>
       ) : (
         <Box

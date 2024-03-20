@@ -508,9 +508,8 @@ export default function ProfilePage() {
                 {user.friends.friends.map((friend: FriendCard) => (
                   <Grid item xs={12} md={6} key={friend._id}>
                     <UserCard
-                      key={friend._id}
                       _id={friend._id}
-                      name={friend.username}
+                      username={friend.username}
                       profilePictureUrl={friend.profilePictureUrl}
                       isSelf={true}
                     />
