@@ -277,24 +277,24 @@ export default function NavBar(props: Props) {
 
                       <Divider sx={{ my: 1 }} />
 
-                      {session && session.user.role.includes("User") && (
-                        <Box>
-                          <MenuItem onClick={handleProfileMenu}>
-                            <ListItemIcon>
-                              <AccountBoxIcon fontSize="small" />
-                            </ListItemIcon>
-                            <Typography textAlign="center" variant="body2">
-                              ดูโปรไฟล์
-                            </Typography>
-                          </MenuItem>
-                          <MenuItem onClick={handleEditProfileMenu}>
-                            <ListItemIcon>
-                              <EditIcon fontSize="small" />
-                            </ListItemIcon>
-                            <Typography textAlign="center" variant="body2">
-                              แก้ไขข้อมูลส่วนตัว
-                            </Typography>
-                          </MenuItem>
+                      <MenuItem onClick={handleProfileMenu}>
+                        <ListItemIcon>
+                          <AccountBoxIcon fontSize="small" />
+                        </ListItemIcon>
+                        <Typography textAlign="center" variant="body2">
+                          ดูโปรไฟล์
+                        </Typography>
+                      </MenuItem>
+                      <MenuItem onClick={handleEditProfileMenu}>
+                        <ListItemIcon>
+                          <EditIcon fontSize="small" />
+                        </ListItemIcon>
+                        <Typography textAlign="center" variant="body2">
+                          แก้ไขข้อมูลส่วนตัว
+                        </Typography>
+                      </MenuItem>
+                      {session.user.role.includes("User") && (
+                        <>
                           <MenuItem onClick={handleFriendRequestMenu}>
                             <ListItemIcon>
                               <PersonAdd fontSize="small" />
@@ -311,7 +311,7 @@ export default function NavBar(props: Props) {
                               กิจกรรมที่เข้าร่วมทั้งหมด
                             </Typography>
                           </MenuItem>
-                        </Box>
+                        </>
                       )}
                     </Box>
                   ) : (
