@@ -88,9 +88,14 @@ export default function CreateProfilePage() {
   };
 
   const handleInputChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
+    event:
+      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent
   ) => {
     const { name, value } = event.target;
+    if (name === "username" && !/^[a-zA-Z0-9]*$/.test(value)) {
+      return;
+    }
     if (
       (name === "idCode" || name === "phoneNumber") &&
       !/^[0-9]*$/.test(value)

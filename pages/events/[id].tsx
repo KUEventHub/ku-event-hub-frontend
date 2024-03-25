@@ -454,7 +454,9 @@ export default function EventInfoPage() {
                               <LeaveEventButton _id={id as string} />
                             ) : (
                               !data.event.userHasJoinedEvent &&
-                              !data.event.userHasConfirmedParticipation && (
+                              !data.event.userHasConfirmedParticipation &&
+                              data.event.participantsCount <
+                                data.event.totalSeats && (
                                 <JoinEventButton _id={id as string} />
                               )
                             )}
