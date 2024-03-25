@@ -47,7 +47,7 @@ const drawerWidth = 275;
 export default function NavBar(props: Props) {
   const { children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const { data } = useQuery({
@@ -338,6 +338,8 @@ export default function NavBar(props: Props) {
                   </MenuItem>
                 </Menu>
               </Box>
+            ) : status === "loading" ? (
+              <Box width={100} />
             ) : (
               <Button
                 color="inherit"
